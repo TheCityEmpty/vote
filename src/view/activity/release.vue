@@ -1,0 +1,347 @@
+<template>
+  <div class="release">
+    <BreadcrumbBox :title="pageType ? '编辑活动 ( 编辑 )' : '发布活动 ( 添加 )'" :breadcrumbItem="breadcrumbItem">
+    </BreadcrumbBox>
+    <div class="box_wrap">
+      <div class="status-radios">
+        <span class="radios-title">活动是否开启：</span>
+        <RadioGroup v-model="activityType" class="oneRadio">
+          <Radio :label="1">开启</Radio>
+          <Radio :label="0">关闭</Radio>
+        </RadioGroup>
+        <span class="radios-title">是否开启报名：</span>
+        <RadioGroup v-model="signUpStatus" class="oneRadio">
+          <Radio :label="1">开启</Radio>
+          <Radio :label="0">关闭</Radio>
+        </RadioGroup>
+        <span class="radios-title">是否开启送礼物：</span>
+        <RadioGroup v-model="giftStatus" class="oneRadio">
+          <Radio :label="1">开启</Radio>
+          <Radio :label="0">关闭</Radio>
+        </RadioGroup>
+      </div>
+
+      <p class="lxh-title-2">活动标题：</p>
+      <Input v-model="name" class="input-block"></Input>
+
+      <p class="lxh-title-2">备注：</p>
+			<Input v-model="note" class="input-block"></Input>
+
+      <p class="lxh-title-2">微信描述：(限200字以内,显示在分享、回复关键词图文中)</p>
+			<Input v-model="content" class="input-block"></Input>
+
+			<UploadPicBox
+        title="缩略图"
+        :defaultList="imgsDefault"
+        class="input-block"
+        @getSingleImgBase64="getSingleImgBase64"
+        @removeSingleImgBase64="removeSingleImgBase64">
+      </UploadPicBox>
+
+      <p class="lxh-title-2">顶部滚动文字（公告）：</p>
+      <Input v-model="notice" class="input-block" type="textarea" :rows="4"></Input>
+
+      <!-- <p class="lxh-title-2">虚拟人气设置：</p>
+			<Input v-model="remark" class="input-block"></Input> -->
+
+      <div class="date">
+        <div class="date-list">
+          <p class="lxh-title-2">活动开始时间：</p>
+          <DatePicker v-model="activityStartTime" type="datetime" placeholder="选择开始时间" style="width: 200px"></DatePicker>
+        </div>
+        <div class="date-list">
+          <p class="lxh-title-2">活动结束时间：</p>
+          <DatePicker v-model="activityEndTime" type="datetime" placeholder="选择结束时间" style="width: 200px"></DatePicker>
+        </div>
+        <div class="date-list">
+          <p class="lxh-title-2">投票开始时间：</p>
+          <DatePicker v-model="voteStartTime" type="datetime" placeholder="选择开始时间" style="width: 200px"></DatePicker>
+        </div>
+        <div class="date-list">
+          <p class="lxh-title-2">投票结束时间：</p>
+          <DatePicker v-model="voteEndTime" type="datetime" placeholder="选择结束时间" style="width: 200px"></DatePicker>
+        </div>
+      </div>
+
+      <p class="lxh-title-2">活动广告（1～5张）：</p>
+
+      <UploadPicBox
+        class="input-block"
+        :defaultList="adImgDefault"
+        multiple
+        @getImgBase64s="getImgBase64s"
+        @removeImgBase64s="removeImgBase64s">
+      </UploadPicBox>
+
+      <div class="input-block">
+        <p class="lxh-title-2">模板界面风格：</p>
+        <Select v-model="model" style="width:200px">
+          <Option v-for="item in modelStyles" :value="item.value" :key="item.value">{{ item.title }}</Option>
+        </Select>
+      </div>
+
+      <p class="lxh-title-2">投票活动规则填写：</p>
+      <quill-editor
+        class="input-block"
+        v-model.trim="rule"
+        ref="myQuillEditor"
+        :options="editorOption">
+        <!-- @blur="onEditorBlur($event)"
+        @focus="onEditorFocus($event)"
+        @ready="onEditorReady($event)" -->
+      </quill-editor>
+
+      <p class="lxh-title-2">奖品内容填写：</p>
+      <quill-editor
+        v-model.trim="prize"
+        :options="editorOption">
+        <!-- @blur="onEditorBlur($event)"
+        @focus="onEditorFocus($event)"
+        @ready="onEditorReady($event)"> -->
+      </quill-editor>
+
+      <Button type="primary" style="margin-top: 30px;" @click="submit">提交</Button>
+		</div>
+
+    <div class="fixed-editor-img-attr-control">
+      <Icon type="md-close" class="close" title="点击关闭弹窗" @click="closeFixed" />
+      <p class="lxh-title">设置图片宽高</p>
+      <p>px 为图片像素（一种单位）， % 为 占输入框的比率</p>
+        <Input v-model="width" style="margin-bottom: 10px;">
+          <span slot="prepend">宽：</span>
+          <Select v-model="widthUnit" slot="append" style="width: 40px">
+            <Option value="px">px</Option>
+            <Option value="%">%</Option>
+          </Select>
+        </Input>
+        <Button type="primary" style="margin-bottom: 30px;" @click="changeImgWidth(width)">改宽</Button>
+
+        <Input v-model="height" style="margin-bottom: 10px;">
+          <span slot="prepend">高：</span>
+          <Select v-model="heightUnit" slot="append" style="width: 40px">
+            <Option value="px">px</Option>
+            <Option value="%">%</Option>
+          </Select>
+        </Input>
+        <Button type="primary" style="margin-bottom: 30px;" @click="changeImgHeight(height)">改高</Button>
+    </div>
+  </div>
+</template>
+
+<script>
+import './activity.scss'
+import UploadPicBox from '@_com/uploadPic/uploadPic.vue'
+import { dateToTimeStamp, timeStampToDate } from '@/libs/tools.js'
+import { createActivity, queryActivity, updateActivity } from '@/api'
+export default {
+  components: {
+    UploadPicBox
+  },
+  data () {
+    return {
+      widthUnit: 'px',
+      heightUnit: 'px',
+      width: '',
+      height: '',
+      editorOption: {
+        placeholder: '请输入',
+        theme: 'snow'
+      },
+      // form start
+      activityType: 1,
+      giftStatus: 1,
+      signUpStatus: 1,
+      name: '',
+      note: '',
+      content: '',
+      imgs: [],
+      notice: '',
+      activityStartTime: '',
+      activityEndTime: '',
+      voteStartTime: '',
+      voteEndTime: '',
+      adImg: [],
+      model: '',
+      rule: '',
+      prize: '',
+      // form end
+      status: 'start',
+      breadcrumbItem: [
+        {
+          title: '活动管理',
+          to: '/activity'
+        },
+        {
+          title: '操作活动'
+        }
+      ],
+      modelStyles: [
+        {
+          title: '默认模板',
+          value: '1'
+        }
+      ],
+      currentImgDom: '',
+      // 页面处于编辑还是新建
+      pageType: false,
+      imgsDefault: '',
+      adImgDefault: ''
+    }
+  },
+
+  watch: {
+    prize () {
+      let DOM1 = document.querySelectorAll('.ql-editor')[1]
+      if (DOM1.querySelectorAll('img').length) {
+        let imgDOMs = DOM1.querySelectorAll('img')
+        Array.prototype.forEach.call(imgDOMs, (item) => {
+          item.addEventListener('click', () => {
+            this.currentImgDom = item
+            let e = event || window.event
+            let position = { 'x': e.clientX, 'y': e.clientY }
+            this.setFixedPosition((position.y + 'px'), (position.x + 'px'))
+          })
+        })
+      }
+    },
+    rule () {
+      let DOM1 = document.querySelectorAll('.ql-editor')[0]
+      if (DOM1.querySelectorAll('img').length) {
+        let imgDOMs = DOM1.querySelectorAll('img')
+        Array.prototype.forEach.call(imgDOMs, (item) => {
+          item.addEventListener('click', () => {
+            this.currentImgDom = item
+            let e = event || window.event
+            let position = { 'x': e.clientX, 'y': e.clientY }
+            this.setFixedPosition((position.y + 'px'), (position.x + 'px'))
+          })
+        })
+      }
+    }
+  },
+
+  mounted () {
+    let id = this.$route.query.id
+    let type = this.$route.query.type
+    if (id) {
+      // type 为2 编辑  为1 复制活动
+      if (type === 2) {
+        this.pageType = !!id
+      }
+      this.queryActivity(id)
+    }
+  },
+  computed: {
+    // editor () {
+    //   return this.$refs.myQuillEditor.quill
+    // }
+  },
+
+  methods: {
+    queryActivity (id) {
+      queryActivity({ id: id }).then(res => {
+        this.activityType = res.activityType
+        this.giftStatus = res.giftStatus
+        this.signUpStatus = res.signUpStatus
+        this.name = res.name
+        this.note = res.note
+        this.content = res.content
+        this.imgsDefault = res.img
+        this.notice = res.notice
+        this.activityStartTime = timeStampToDate(res.activityStartTime)
+        this.activityEndTime = timeStampToDate(res.activityEndTime)
+        this.voteStartTime = timeStampToDate(res.voteStartTime)
+        this.voteEndTime = timeStampToDate(res.voteEndTime)
+        this.adImgDefault = res.adImg
+        this.model = res.model
+        this.rule = res.rule
+        this.prize = res.prize
+      })
+    },
+    removeImgBase64s (id) {
+      let index = this.adImg.findIndex(item => item.id === id)
+      this.adImg.splice(index, 1)
+    },
+    getImgBase64s (base64) {
+      if (base64.length) {
+        this.adImg = base64
+      } else {
+        this.adImg.push(base64)
+      }
+    },
+    removeSingleImgBase64 () {
+      this.imgs = []
+    },
+    getSingleImgBase64 (base64) {
+      this.imgs.push(base64)
+    },
+    changeImgWidth (width) {
+      let readlyWidth = width
+      if (this.widthUnit === 'px') {
+        readlyWidth = readlyWidth + 'px'
+      } else {
+        readlyWidth = readlyWidth + '%'
+      }
+      this.currentImgDom.style.width = readlyWidth
+    },
+    changeImgHeight (height) {
+      let readlyHeight = height
+      if (this.widthUnit === 'px') {
+        readlyHeight = readlyHeight + 'px'
+      } else {
+        readlyHeight = readlyHeight + '%'
+      }
+      this.currentImgDom.style.height = readlyHeight
+    },
+    setFixedPosition (top, left) {
+      let fixedDom = document.querySelectorAll('.fixed-editor-img-attr-control')
+      fixedDom[0].style.top = top
+      fixedDom[0].style.left = left
+    },
+    closeFixed () {
+      this.setFixedPosition('10000px', '10000px')
+    },
+    submit () {
+      let params = {
+        activityType: this.activityType,
+        giftStatus: this.giftStatus,
+        signUpStatus: this.signUpStatus,
+        name: this.name,
+        note: this.note,
+        content: this.content,
+        imgs: this.imgs,
+        notice: this.notice,
+        activityStartTime: dateToTimeStamp(this.activityStartTime),
+        activityEndTime: dateToTimeStamp(this.activityEndTime),
+        voteStartTime: dateToTimeStamp(this.voteStartTime),
+        voteEndTime: dateToTimeStamp(this.voteStartTime),
+        adImg: this.adImg.map(item => item.val),
+        model: this.model,
+        rule: this.rule,
+        prize: this.prize
+      }
+      this.$Modal.confirm({
+        content: `是否${this.pageType ? '修改' : '提交'}该活动？`,
+        onOk: () => {
+          this.setGlobalLoading(true)
+          if (this.pageType) {
+            let id = this.$route.query.id
+            updateActivity({
+              ...params,
+              id: id
+            }).then(res => {
+              this.$Message.info(`修改活动成功`)
+              this.queryActivity(id)
+            }).finally(() => { this.setGlobalLoading(false) })
+          } else {
+            createActivity(params).then(res => {
+              this.$Message.info(`新建活动成功`)
+              this.$router.go(-1)
+            }).finally(() => { this.setGlobalLoading(false) })
+          }
+        }
+      })
+    }
+  }
+}
+</script>

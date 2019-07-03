@@ -1,0 +1,42 @@
+/**  活动列表  */
+.article-box {
+	padding: 20px;
+	.tables {
+		position: relative;
+		.btns {
+			border-bottom: 2px solid #ab9a9a;
+		}
+		.btns button {
+			margin: 3px;
+		}
+	}
+}
+/**  发布活动  */
+.release {
+	.status-radios {
+		margin-bottom: 20px;
+		.oneRadio {
+			margin-right: 50px;
+		}
+		.radios-title {
+			display: inline-block;
+			vertical-align: middle;
+		}
+	}
+
+	.input-block {
+		margin-bottom: 20px;
+	}
+
+	.date {
+		.date-list {
+			display: inline-block;
+			margin-right: 20px;
+			width: 40%;
+			margin-bottom: 20px;
+		}
+	}
+}
+
+
+

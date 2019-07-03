@@ -1,0 +1,65 @@
+@keyframes rotating{
+	from{transform:rotate(0)}
+	to{transform:rotate(360deg)}
+}
+.login {
+  height: 100vh;
+  position: relative;
+  background-size: 100% 100%;
+}
+
+.fromStyle {
+  width: 30%;
+  height: 80%;
+  position: absolute;
+  padding: 15px;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+}
+
+.btn {
+  width: 100%;
+  padding: 10px;
+}
+
+.inputBox {
+	position: relative;
+	margin-bottom: 35px;
+}
+
+.label {
+  position: absolute;
+  top: 0;
+  left: 5px;
+  z-index: 99;
+}
+.radioText {
+	color:#67a7ea;
+}
+.from-title {
+  color: #67a7ea;
+  font-size: 30px;
+  padding: 15px 0;
+}
+.logo-text {
+  font: 1em/1 Bangers, sans-serif;
+  text-align: center;
+}
+.btn-box-login {
+	position: relative;
+}
+.btn-box-login .btn-login-icon {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	margin-left: 20px;
+	margin-top: -6px;
+	color: #fff;
+	animation: rotating 1.2s linear infinite;
+}
+.inputBox	input.ivu-input {
+	padding-left: 35px!important;
+}

@@ -1,0 +1,109 @@
+$width: 28px;
+// 数据为空时给个最小高度 #
+.tableList .ivu-table-row-hover>td {
+	background-color: #f5f7fa;
+}
+.tableList .ivu-table-body {
+	min-height: 400px;
+}
+.tableList .ivu-table-tip table{
+	min-height: 400px;
+}
+.tableList .ivu-table th, .tableList .ivu-table td {
+	border-color: #ebeef5;
+}
+.tableList .ivu-table th {
+	background-color: transparent;
+	font-weight: 600;
+	color: #909399;
+}
+.tableList .ivu-table-wrapper {
+	border: 0 none;
+	border-radius: 4px 4px 0 0;
+}
+.tableList .ivu-table:after {
+	display: none;
+}
+.tableList .ivu-table-fixed-header {
+	background-color: #ece8e8;
+}
+.tableList {
+	.table-content {
+		position: relative;
+	}
+}
+// pages
+.tableList {
+	.ivu-page-next, .ivu-page-prev {
+		&>a {
+			font-size: 12px;
+		}
+	}
+	.ivu-page-disabled {
+		&:hover a {
+			color: #ccc !important;
+		}
+	}
+	.ivu-page-item-active {
+		&:hover a {
+			color: #fff !important;
+		}
+	}
+	.ivu-page-item, .ivu-page-next, .ivu-page-prev {
+		background-color: #f4f4f5;
+		min-width: 42px;
+    height: 28px;
+		line-height: 26px;
+		border: 1px solid #d8dee3;
+		border-radius: 2px;
+		&>a {
+			font-weight: 600;
+		}
+		&:hover a {
+			color: #409eff;
+		}
+	}
+	.table-page {
+		text-align: right;
+		margin-top: 24px;
+	}
+	.pages {
+		display: inline-block;
+	}
+	.ivu-page-item-active {
+		border-color: #409eff;;
+		background-color: #409eff;
+		&>a {
+			color: #fff;
+		}
+	}
+	.page-total, .page-goto {
+		display: inline-block;
+    margin: 0 10px;
+    height: 32px;
+    line-height: 32px;
+		vertical-align: top;
+		color: #666;
+	}
+	.page-total>span {
+		margin: 0 5px;
+		font-weight: 600;
+	}
+	.page-input {
+		width: 58px;
+		height: 28px;
+		border: 1px solid #ddd;
+		padding: 0 5px;
+	}
+	.gotoBtn {
+		width: $width;
+		background-color: #409eff;
+		line-height: 26px;
+		display: inline-block;
+		color: #fff;
+		border: 1px solid #409eff;
+		&>i {
+			font-size: 20px;
+		}
+	}
+}
