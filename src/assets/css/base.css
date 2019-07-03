@@ -1,8 +1,9 @@
-/* css默认样式清除  字体使用iview  推荐，iview 已集成*/
+/* css默认样式清除  字体使用iview  推荐，iview 已集成 */
 *{font-size: 14px; }
 html,body,h1,h2,h3,h4,h5,h6,p,ul,li,ol,dl,dt,dd,div,span,a,b,i,strong,em,img,form,input,textarea,table,th,td,section{padding:0; margin:0;}
 html,body{ width:100%; height:100%;overflow:initial;}
-body{color:#313131;-webkit-overflow-scrolling:touch;background-color: #f6fafd !important;}
+body{color:#313131;-webkit-overflow-scrolling:touch;background-color: #f6fafd !important;
+  background-image: url(https://gw.alipayobjects.com/zos/rmsportal/TVYTbAXWheQpRcWDaDMu.svg);}
 h1,h2,h3,h4,h5,h6{ font-size:100%; line-height:100%; font-weight:normal;}
 li{ list-style:none;}
 a{ text-decoration:none; color:#313131;-webkit-tap-highlight-color: rgba(0,0,0,0)}

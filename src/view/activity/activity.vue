@@ -34,7 +34,14 @@
         v-model="modalVal"
         :mask-closable="false">
         <div class="modalContent">
-          <p>http://www.luoxuehui.com</p>
+           <Alert type="success">
+              “{{ modalName }}” 的访问链接和二维码（微信扫描进入）
+              <template slot="desc">
+                <p style="color:#ed4014;font-size: 16px;font-weight: 600;padding-left: 20px;">
+                  http://www.luoxuehui.com
+                </p>
+              </template>
+          </Alert>
           <div style="width: 200px;height: 200px;">
             <div id="qrcode" ref="qrcode"></div>
           </div>
@@ -157,7 +164,7 @@ export default {
             return (<div class="btns">
               <Button size="small" onClick={ () => { this.editActivity(param.row.id) } }>编辑</Button>
               <Button size="small" onClick={ () => { this.deleteActivity(param.row.id) } }>删除</Button>
-              <Button size="small" onClick={ () => { this.mackqrcode() } }>链接</Button>
+              <Button size="small" onClick={ () => { this.mackqrcode(param.row.name) } }>链接</Button>
               <Button size="small" onClick={ () => { this.cloneActivity(param.row.id) } }>复制</Button>
               <Button size="small">报名</Button>
               <Button size="small">投票</Button>
@@ -171,7 +178,8 @@ export default {
       activityStatus: '',
       name: '',
       cpage: 1,
-      qrcode: ''
+      qrcode: '',
+      modalName: ''
     }
   },
 
@@ -192,8 +200,9 @@ export default {
       })
     },
 
-    mackqrcode () {
+    mackqrcode (name) {
       this.modalVal = true
+      this.modalName = name
       this.qrcode.makeCode('http://www.luoxuehui.com/vote')
     },
 
