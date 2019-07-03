@@ -27,6 +27,19 @@
         </TableList>
       </div>
     </div>
+
+    <!-- Modal -->
+    <Modal
+        title="链接"
+        v-model="modalVal"
+        :mask-closable="false">
+        <div class="modalContent">
+          <p>http://www.luoxuehui.com</p>
+          <div style="width: 200px;height: 200px;">
+            <div id="qrcode" ref="qrcode"></div>
+          </div>
+        </div>
+    </Modal>
   </div>
 </template>
 
@@ -36,6 +49,7 @@ import TableList from '@_com/tableList'
 import { Button, Input, Tooltip } from 'iview'
 import { getAllActivity, deleteActivity, updateActivity } from '@/api'
 import { timeStampToDate } from '@/libs/tools.js'
+import QRCode from 'qrcodejs2'
 export default {
   name: 'activity',
   components: {
@@ -43,6 +57,7 @@ export default {
   },
   data () {
     return {
+      modalVal: false,
       tableColumns: [
         {
           title: '图片',
@@ -142,7 +157,7 @@ export default {
             return (<div class="btns">
               <Button size="small" onClick={ () => { this.editActivity(param.row.id) } }>编辑</Button>
               <Button size="small" onClick={ () => { this.deleteActivity(param.row.id) } }>删除</Button>
-              <Button size="small">链接</Button>
+              <Button size="small" onClick={ () => { this.mackqrcode() } }>链接</Button>
               <Button size="small" onClick={ () => { this.cloneActivity(param.row.id) } }>复制</Button>
               <Button size="small">报名</Button>
               <Button size="small">投票</Button>
@@ -155,15 +170,33 @@ export default {
       isLoading: false,
       activityStatus: '',
       name: '',
-      cpage: 1
+      cpage: 1,
+      qrcode: ''
     }
   },
 
-  created () {
+  mounted () {
     this.getActivity(this.cpage)
+    this.initqrcode()
   },
 
   methods: {
+
+    initqrcode () {
+      this.qrcode = new QRCode('qrcode', {
+        width: 132,
+        height: 132,
+        text: '', // 需要二维码跳转的地址
+        colorDark: '#000000', // 前景色
+        colorLight: '#ffffff' // 背景色
+      })
+    },
+
+    mackqrcode () {
+      this.modalVal = true
+      this.qrcode.makeCode('http://www.luoxuehui.com/vote')
+    },
+
     search () {
       this.getActivity(this.cpage)
     },
