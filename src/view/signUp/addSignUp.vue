@@ -166,7 +166,8 @@ export default {
         virtualTicket: this.virtualTicket,
         address: this.address,
         content: this.content,
-        img: this.img.map(item => item.val)
+        img: this.img.map(item => item.val),
+        signType: Number(this.$route.query.signType)
       }
       console.log(params)
       this.$Modal.confirm({
@@ -241,6 +242,7 @@ export default {
         })
         this.activitys = tableData.map(item => {
           return {
+            img: JSON.parse(item.img)[0],
             name: item.name,
             id: item.id
           }

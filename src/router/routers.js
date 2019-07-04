@@ -24,6 +24,11 @@ export default [
         name: 'release',
         component: () => import(/* webpackChunkName: "release" */'@/view/activity/release')
       },
+      // {
+      //   path: '/activitySignUp',
+      //   name: 'activitySignUp',
+      //   component: () => import(/* webpackChunkName: "activitySignUp" */'@/view/activity/signUp')
+      // },
       {
         path: '/signUp',
         name: 'signUp',

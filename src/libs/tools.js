@@ -179,7 +179,7 @@ export const timeStampToDate = (timestamp) => {
 
   let date = new Date(timestamp * 1000)
   let Y = date.getFullYear() + '-'
-  let M = getHandledValue(date.getMonth()) + '-'
+  let M = getHandledValue(date.getMonth() + 1) + '-'
   let D = getHandledValue(date.getDate()) + ' '
   let h = getHandledValue(date.getHours()) + ':'
   let m = getHandledValue(date.getMinutes()) + ':'

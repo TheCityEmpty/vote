@@ -166,7 +166,7 @@ export default {
               <Button size="small" onClick={ () => { this.deleteActivity(param.row.id) } }>删除</Button>
               <Button size="small" onClick={ () => { this.mackqrcode(param.row.name) } }>链接</Button>
               <Button size="small" onClick={ () => { this.cloneActivity(param.row.id) } }>复制</Button>
-              <Button size="small">报名</Button>
+              <Button size="small" onClick={ () => { this.gotoSignUp(param.row) } }>报名</Button>
               <Button size="small">投票</Button>
             </div>)
           }
@@ -189,6 +189,13 @@ export default {
   },
 
   methods: {
+
+    gotoSignUp (row) {
+      this.$router.push({
+        path: '/signUp',
+        query: { id: row.id, name: row.name }
+      })
+    },
 
     initqrcode () {
       this.qrcode = new QRCode('qrcode', {

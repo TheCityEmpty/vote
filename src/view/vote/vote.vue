@@ -2,12 +2,22 @@
 	<div class="vote-box">
 		<BreadcrumbBox title="投票管理"></BreadcrumbBox>
     <div class="box_wrap btns" style="margin-bottom: 20px;">
-      <Button type="primary">导出</Button>
+      <Button type="primary" @click="exportVote">导出所有</Button>
       <Button type="primary">批量删除</Button>
-      <Select v-model="activityName" style="width:400px">
-        <span slot="prefix">活动名称</span>
-        <Option v-for="item in activitys" :value="item.id" :key="item.id">{{ item.name }}</Option>
-    </Select>
+      <br />
+      <p class="lxh-title-2">活动标题：</p>
+      <Select v-model="activityId" style="width:400px;margin: 30px 0;">
+        <Option v-for="item in activitys" :label="item.name" :value="item.id" :key="item.id">
+          <div>
+            <img class="img-avtor" :src="item.img" />
+            <span class="active-name" :title="item.name">{{ item.name }}</span>
+          </div>
+        </Option>
+      </Select>
+      <br />
+      <p class="lxh-title-2">时间范围：</p>
+      <DatePicker type="daterange" placement="bottom-end" placeholder="Select date" style="width: 200px"></DatePicker>
+      <Button type="primary" style="margin-left: 30px;">搜索</Button>
     </div>
     <div class="box_wrap">
       <div class="tables">
@@ -26,6 +36,7 @@
 
 <script>
 import './vote.scss'
+import axios from 'axios'
 import TableList from '@_com/tableList'
 import { queryVoteList, getAllActivity } from '@/api'
 export default {
@@ -35,7 +46,7 @@ export default {
   },
   data () {
     return {
-      activityName: '',
+      activityId: '',
       activitys: [],
       tableColumns: [
         {
@@ -67,15 +78,15 @@ export default {
           title: '投票人微信名称',
           key: 'memberName',
           minWidth: 200
-        },
-        {
-          title: '操作',
-          width: 70,
-          fixed: 'right',
-          render: (h, param) => {
-            return (<Button size="small" onClick={ () => { this.deleteVoteRecord(param.row.id) } }>删除</Button>)
-          }
         }
+        // {
+        //   title: '操作',
+        //   width: 70,
+        //   fixed: 'right',
+        //   render: (h, param) => {
+        //     return (<Button size="small" onClick={ () => { this.deleteVoteRecord(param.row.id) } }>删除</Button>)
+        //   }
+        // }
       ],
       tableData: [],
       pageParams: {},
@@ -90,6 +101,39 @@ export default {
   },
 
   methods: {
+
+    exportVote () {
+      let formData = new FormData()
+      let token = localStorage.getItem('token')
+      formData.append('token', token)
+      axios.post('http://www.luoxuehui.com/app/exportVote', formData, {
+        timeout: 10000,
+        responseType: 'arraybuffer',
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then((res) => {
+        if (Number(res.data.code) === 2) {
+          this.$Message.error('导出数据失败，请重新导出数据！')
+        } else {
+          const content = res.data
+          const blob = new Blob([content])
+          const fileName = '导出数据.xlsx'
+          if ('download' in document.createElement('a')) { // 非IE下载
+            const elink = document.createElement('a')
+            elink.download = fileName
+            elink.style.display = 'none'
+            elink.href = URL.createObjectURL(blob)
+            document.body.appendChild(elink)
+            elink.click()
+            URL.revokeObjectURL(elink.href) // 释放URL 对象
+            document.body.removeChild(elink)
+          } else { // IE10+下载
+            navigator.msSaveBlob(blob, fileName)
+          }
+        }
+      })
+    },
     getAllActivityName () {
       getAllActivity({
         length: 100,
@@ -103,6 +147,7 @@ export default {
         })
         this.activitys = tableData.map(item => {
           return {
+            img: JSON.parse(item.img)[0],
             name: item.name,
             id: item.id
           }
@@ -121,9 +166,6 @@ export default {
       })
     },
     updatePage () {
-
-    },
-    deleteVoteRecord () {
 
     }
   }

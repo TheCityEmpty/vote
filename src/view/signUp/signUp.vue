@@ -1,16 +1,12 @@
 <template>
   <div class="signUp-box">
-    <BreadcrumbBox title="报名管理"></BreadcrumbBox>
+    <BreadcrumbBox title="报名管理" :breadcrumbItem="breadcrumbItem"></BreadcrumbBox>
+    <Alert v-show="aname">{{ aname }}</Alert>
     <div class="box_wrap btns" style="margin-bottom: 20px;">
       <Button type="primary" :to="{ path: '/addSignUp' }">自定义添加报名人</Button>
       <Button type="primary">批量删除</Button>
-      <Button type="primary">批量上传</Button>
-      <Button type="primary">导出</Button>
-      <Upload
-        multiple
-        action="/app/zipUpLoad">
-        <Button icon="ios-cloud-upload-outline">Upload files</Button>
-      </Upload>
+      <Button type="primary" @click="exportVote">导出所有</Button>
+      <Button type="primary" icon="ios-cloud-upload-outline" @click="openModal">导入数据</Button>
       <div class="searchBox" style="width: 400px;display: inline-block;vertical-align: top;">
         <Input v-model="searchVal" search enter-button="搜索" placeholder="输入关键字" @on-search="search">
           <Select v-model="selectType" slot="prepend" style="width: 80px">
@@ -33,13 +29,51 @@
         </TableList>
       </div>
     </div>
+
+    <div class="fixed-loading" v-if="uploadinng">
+      数据导入中， 请稍等...
+    </div>
+    <Modal
+        title="导入数据"
+        footer-hide
+        v-model="modalShow"
+        :mask-closable="false">
+        <div class="modalContent">
+          <Alert type="warning" show-icon>
+            <p>1.请先选择针对哪个活动导入数据 </p>
+            <p>2.图片压缩包必须导入.zip格式 </p>
+            <p>3.Excel文本必须导入.xlsx、.xls格式，</p>
+            <p>4.可导入多个图片压缩包，但，只能导入一个且仅可导入一个Excel文件</p>
+            <p>5.点击导入数据后， 最后点击提交导入数据才可成功导入数据</p>
+          </Alert>
+          <Select v-model="activityId" style="width:400px;margin: 30px 0;">
+              <Option v-for="item in activitys" :label="item.name" :value="item.id" :key="item.id">
+                <div>
+                  <img class="img-avtor" :src="item.img" />
+                  <span class="active-name" :title="item.name">{{ item.name }}</span>
+                </div>
+              </Option>
+          </Select>
+          <Upload
+            v-show="activityId"
+            style="display: inline-block;"
+            :before-upload="beforeUpload"
+            multiple
+            action="/app/zipUpLoad">
+            <Button type="primary" icon="ios-cloud-upload-outline">导入数据</Button>
+          </Upload>
+          <p style="display: block;margin: 20px 0;" v-for="(item, index) in files" :key="index">{{ item.name }}</p>
+          <Button v-show="activityId" type="primary" style="display: block;margin: 20px 0;" @click="upload">提交导入数据</Button>
+        </div>
+    </Modal>
   </div>
 </template>
 
 <script>
 import './signUp.scss'
+import axios from 'axios'
 import TableList from '@_com/tableList'
-import { getSignUpUse, deleteSignUpUser, updateSignUpUser } from '@/api'
+import { getAllActivity, getSignUpUse, deleteSignUpUser, updateSignUpUser, getActivitySignUp } from '@/api'
 import { Button, InputNumber } from 'iview'
 import { timeStampToDate } from '@/libs/tools.js'
 export default {
@@ -49,6 +83,10 @@ export default {
   },
   data () {
     return {
+      activityId: '',
+      activitys: [],
+      uploadinng: false,
+      breadcrumbItem: [],
       selectType: '编号',
       tableColumns: [
         {
@@ -59,7 +97,7 @@ export default {
         {
           title: '投票号',
           key: 'num',
-          minWidth: 50
+          minWidth: 80
         },
         {
           title: '图片',
@@ -151,26 +189,174 @@ export default {
       // searchVal: '',
       cpage: 1,
       searchVal: '',
-      virtualTicket: ''
+      virtualTicket: '',
+      aname: '',
+      modalShow: false,
+      files: []
     }
   },
 
+  beforeRouteUpdate (to, from, next) {
+    let id = to.query.id
+    this.aname = to.query.name
+    this.routerInit(id)
+    next()
+  },
+
   created () {
-    this.getSignUpUse(this.cpage)
+    let id = this.$route.query.id
+    this.aname = this.$route.query.name
+    this.routerInit(id)
   },
 
   methods: {
 
+    exportVote () {
+      let formData = new FormData()
+      let token = localStorage.getItem('token')
+      formData.append('token', token)
+      axios.post('http://www.luoxuehui.com/app/exportSignUpUser', formData, {
+        timeout: 10000,
+        responseType: 'arraybuffer',
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then((res) => {
+        if (Number(res.data.code) === 2) {
+          this.$Message.error('导出数据失败，请重新导出数据！')
+        } else {
+          const content = res.data
+          const blob = new Blob([content])
+          const fileName = '导出数据.xlsx'
+          if ('download' in document.createElement('a')) { // 非IE下载
+            const elink = document.createElement('a')
+            elink.download = fileName
+            elink.style.display = 'none'
+            elink.href = URL.createObjectURL(blob)
+            document.body.appendChild(elink)
+            elink.click()
+            URL.revokeObjectURL(elink.href) // 释放URL 对象
+            document.body.removeChild(elink)
+          } else { // IE10+下载
+            navigator.msSaveBlob(blob, fileName)
+          }
+        }
+      })
+    },
+
+    beforeUpload (files) {
+      this.files.push(files)
+      return false
+    },
+
+    upload () {
+      let formData = new FormData()
+      for (let i = 0, len = this.files.length; i < len; i++) {
+        formData.append(`file${i}`, this.files[i])
+      }
+      formData.append('id', this.activityId)
+      this.uploadinng = true
+      axios.post('http://www.luoxuehui.com/app/zipUpLoad', formData, {
+        timeout: 10000,
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then((res) => {
+        if (Number(res.data.code) === 2) {
+          this.uploadinng = false
+          this.files = []
+          this.$Message.error('导入数据失败，请按提示上传正确文件！')
+        } else {
+          this.$Message.info('导入数据成功！')
+          this.uploadinng = false
+          let id = this.$route.query.id
+          this.aname = this.$route.query.name
+          this.routerInit(id)
+          this.modalShow = false
+        }
+      })
+    },
+
+    openModal () {
+      this.modalShow = true
+      this.getAllActivityName()
+    },
+
+    getAllActivityName () {
+      getAllActivity({
+        length: 100,
+        page: 1
+      }).then(res => {
+        let tableData = (res.list || []).map(item => {
+          return {
+            ...item,
+            ...item.activity
+          }
+        })
+        this.activitys = tableData.map(item => {
+          return {
+            img: JSON.parse(item.img)[0],
+            name: item.name,
+            id: item.id
+          }
+        })
+      })
+    },
+
+    routerInit (id) {
+      if (id && this.aname) {
+        this.activityId = id
+        this.breadcrumbItem = [
+          {
+            title: '活动管理',
+            to: '/activity'
+          },
+          {
+            title: '该活动下的报名人'
+          }
+        ]
+        this.getActivitySignUp(this.cpage, id)
+      } else {
+        this.activityId = id
+        this.breadcrumbItem = []
+        this.getSignUpUse(this.cpage)
+      }
+    },
+
+    getActivitySignUp (cpage, id) {
+      // 导入 数据
+      getActivitySignUp({
+        length: 10,
+        page: cpage,
+        status: 0,
+        activityId: id,
+        signType: 1
+      }).then(res => {
+        this.tableData = (res.list || []).map(item => {
+          return {
+            ...item,
+            ...item.signUpUser
+          }
+        })
+        this.pageParams = {
+          count: res.totalRows,
+          rows: 10
+        }
+      })
+    },
+
     radioChange (status, row) {
       let params = {
-        activityId: row.activityId,
-        name: row.name,
+        activityId: row.activity,
+        name: row.userName,
         phone: row.phone,
         virtualTicket: row.virtualTicket,
         address: row.address,
         content: row.content,
         img: JSON.parse(row.img),
-        checkStatus: status
+        checkStatus: status,
+        signType: this.aname ? 1 : 0
+
       }
       updateSignUpUser({
         ...params,
@@ -187,8 +373,8 @@ export default {
 
     virtualTicketChange (row) {
       let params = {
-        activityId: row.activityId,
-        name: row.name,
+        activityId: row.activity,
+        name: row.userName,
         phone: row.phone,
         virtualTicket: this.virtualTicket,
         address: row.address,
@@ -197,7 +383,8 @@ export default {
       }
       updateSignUpUser({
         ...params,
-        id: row.id
+        id: row.id,
+        signType: this.aname ? 1 : 0
       }).then(res => {
         this.$Message.info(`修改票数成功`)
         this.getSignUpUse(this.cpage)
@@ -234,13 +421,14 @@ export default {
     editSignUp (id) {
       this.$router.push({
         path: '/addSignUp',
-        query: { id: id }
+        query: { id: id, signType: this.aname ? 1 : 0 }
       })
     },
     updatePage (cpage) {
       this.getSignUpUse(cpage)
     },
     getSignUpUse (cpage, p) {
+      // 自主报名
       getSignUpUse({
         length: 10,
         page: cpage,

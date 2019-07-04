@@ -5,6 +5,26 @@ import http from '@/libs/axios'
 //   return getHttp('/queryActivityList', params, 'get')
 // }
 
+// // 导出 报名人
+// export const exportSignUpUser = (params) => {
+//   return getHttp('/exportSignUpUser', params, 'post')
+// }
+
+// 查询订单
+export const selectOrderCase = (params) => {
+  return getHttp('/selectOrderCase', params, 'post')
+}
+
+// 导入
+export const getActivitySignUp = (params) => {
+  return getHttp('/querySignUpUserList', params, 'get')
+}
+
+// 查看 某个活动下的 报名人
+export const zipUpLoad = (params) => {
+  return getHttp('/zipUpLoad', params, 'post')
+}
+
 // 查看投票情况
 export const queryVoteList = (params) => {
   return getHttp('/queryVoteList', params, 'post')
