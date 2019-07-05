@@ -239,7 +239,8 @@ export default {
 
   methods: {
     queryActivity (id) {
-      queryActivity({ id: id }).then(res => {
+      queryActivity({ id: id }).then(result => {
+        let res = result.data
         this.activityType = res.activityType
         this.giftStatus = res.giftStatus
         this.signUpStatus = res.signUpStatus
@@ -335,8 +336,12 @@ export default {
             }).finally(() => { this.setGlobalLoading(false) })
           } else {
             createActivity(params).then(res => {
-              this.$Message.info(`新建活动成功`)
-              this.$router.go(-1)
+              if (Number(res.code) === 2) {
+                this.$Message.info(`新建活动失败`)
+              } else {
+                this.$Message.info(`新建活动成功`)
+                this.$router.go(-1)
+              }
             }).finally(() => { this.setGlobalLoading(false) })
           }
         }

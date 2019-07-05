@@ -287,7 +287,7 @@ export default {
         length: 100,
         page: 1
       }).then(res => {
-        let tableData = (res.list || []).map(item => {
+        let tableData = (res.data.list || []).map(item => {
           return {
             ...item,
             ...item.activity
@@ -332,14 +332,14 @@ export default {
         activityId: id,
         signType: 1
       }).then(res => {
-        this.tableData = (res.list || []).map(item => {
+        this.tableData = (res.data.list || []).map(item => {
           return {
             ...item,
             ...item.signUpUser
           }
         })
         this.pageParams = {
-          count: res.totalRows,
+          count: res.data.totalRows,
           rows: 10
         }
       })
@@ -434,14 +434,14 @@ export default {
         page: cpage,
         ...p
       }).then(res => {
-        this.tableData = (res.list || []).map(item => {
+        this.tableData = (res.data.list || []).map(item => {
           return {
             ...item,
             ...item.signUpUser
           }
         })
         this.pageParams = {
-          count: res.totalRows,
+          count: res.data.totalRows,
           rows: 10
         }
       })

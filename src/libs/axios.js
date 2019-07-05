@@ -76,7 +76,7 @@ http.interceptors.response.use(function (res) {
     Message.error(res.data.content)
     // return Promise.reject(res)
   }
-  return Promise.resolve(res.data.data)
+  return Promise.resolve(res.data)
 }, function (error) {
   Message.destroy()
   Message.error('服务内部错误!')

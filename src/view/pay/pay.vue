@@ -121,9 +121,9 @@ export default {
         page: cpage,
         ...p
       }).then(res => {
-        this.tableData = res.list || []
+        this.tableData = res.data.list || []
         this.pageParams = {
-          count: res.totalRows,
+          count: res.data.totalRows,
           rows: 30
         }
       }).finally(() => { this.isLoading = false })
@@ -134,7 +134,7 @@ export default {
         length: 100,
         page: 1
       }).then(res => {
-        let tableData = (res.list || []).map(item => {
+        let tableData = (res.data.list || []).map(item => {
           return {
             ...item,
             ...item.activity

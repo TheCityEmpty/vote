@@ -148,7 +148,8 @@ export default {
 
   methods: {
     getOneSignUpUser (id) {
-      getOneSignUpUser({ id: id }).then(res => {
+      getOneSignUpUser({ id: id }).then(result => {
+        let res = result.data
         this.activityId = res.signUpUser.activity
         this.name = res.signUpUser.userName
         this.virtualTicket = res.signUpUser.virtualTicket
@@ -234,7 +235,7 @@ export default {
         length: 100,
         page: 1
       }).then(res => {
-        let tableData = (res.list || []).map(item => {
+        let tableData = (res.data.list || []).map(item => {
           return {
             ...item,
             ...item.activity

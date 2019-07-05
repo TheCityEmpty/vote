@@ -139,7 +139,7 @@ export default {
         length: 100,
         page: 1
       }).then(res => {
-        let tableData = (res.list || []).map(item => {
+        let tableData = (res.data.list || []).map(item => {
           return {
             ...item,
             ...item.activity
@@ -160,7 +160,7 @@ export default {
         page: cpage
       }).then(res => {
         this.pageParams = {
-          count: res.totalRows,
+          count: res.data.totalRows,
           rows: 10
         }
       })

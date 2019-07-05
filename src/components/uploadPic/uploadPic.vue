@@ -48,7 +48,7 @@ export default {
       type: Array,
       default () {
         return ['bmp', 'jpg', 'png', 'tif', 'gif', 'pcx', 'tga', 'exif', 'fpx', 'svg', 'psd', 'cdr',
-          'pcd', 'dxf', 'ufo', 'eps', 'ai', 'raw', 'WMF', 'webp']
+          'pcd', 'dxf', 'ufo', 'eps', 'ai', 'raw', 'WMF', 'webp', 'jpeg']
       }
     }
   },

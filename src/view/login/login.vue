@@ -60,7 +60,7 @@ export default {
             userName: this.AccountForm.userName,
             password: md5PWD
           }).then(res => {
-            let token = res.user.token
+            let token = res.data.user.token
             localStorage.setItem('token', token)
             this.$Message.success({
               content: '登录成功',

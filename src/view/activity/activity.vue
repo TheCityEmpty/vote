@@ -222,6 +222,10 @@ export default {
     },
 
     statusChange (status, row) {
+      console.log(this.tableData)
+      // if (this.tableData.filter(item => Number(item.activityType) === 1).length > 1) {
+      //   this.$Message.warning('tong')
+      // }
       let params = {
         id: row.id,
         activityType: status ? 0 : 1,
@@ -315,14 +319,14 @@ export default {
         activityStatus: this.activityStatus,
         name: this.name
       }).then(res => {
-        this.tableData = (res.list || []).map(item => {
+        this.tableData = (res.data.list || []).map(item => {
           return {
             ...item,
             ...item.activity
           }
         })
         this.pageParams = {
-          count: res.totalRows,
+          count: res.data.totalRows,
           rows: 10
         }
       }).finally(() => { this.isLoading = false })
