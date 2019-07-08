@@ -43,25 +43,27 @@ export default {
           message: '请输入密码',
           trigger: 'blur'
         }]
-      },
-      checked: false
+      }
     }
   },
 
   methods: {
     submitForm (formName) {
+      if (this.logining) {
+        return
+      }
       this.$refs[formName].validate((valid) => {
         if (valid) {
           let self = this
           this.logining = true
           let md5PWD = md5(this.AccountForm.password)
-          this.AccountForm.password = md5PWD
           login({
             userName: this.AccountForm.userName,
             password: md5PWD
           }).then(res => {
             let token = res.data.user.token
             localStorage.setItem('token', token)
+            localStorage.setItem('username', this.AccountForm.userName)
             this.$Message.success({
               content: '登录成功',
               onClose () {

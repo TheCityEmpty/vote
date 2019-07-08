@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store'
+import echarts from 'echarts'
 
 /**
  * @description 字体图标
@@ -34,6 +35,7 @@ import '@/assets/css/base.css'
 import '@/mixins'
 import config from '@/config'
 import { http } from './libs/axios'
+Vue.prototype.$echarts = echarts
 
 Vue.use(Loading)
 Vue.use(BreadcrumbBox)

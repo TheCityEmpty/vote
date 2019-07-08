@@ -15,6 +15,11 @@ export default [
     component: index,
     children: [
       {
+        path: '/chart',
+        name: 'chart',
+        component: () => import(/* webpackChunkName: "chart" */'@/view/chart')
+      },
+      {
         path: '/activity',
         name: 'activity',
         component: () => import(/* webpackChunkName: "activity" */'@/view/activity/activity')

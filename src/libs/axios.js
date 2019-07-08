@@ -34,7 +34,14 @@ http.interceptors.request.use(function (config) {
 
 // 请求后的钩子函数
 http.interceptors.response.use(function (res) {
+  if (res.data.content === 'token必传') {
+    Message.error('登录过期!')
+    router.push({
+      path: '/login'
+    })
+  }
   if (res.data.code === '-1') {
+    Message.error('登录过期!')
     router.push({
       path: '/login'
     })

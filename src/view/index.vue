@@ -9,7 +9,7 @@
         <div class="user-logo">
           <img src="@_img/default-avatar.png" />
           <div class="btns">
-            <Button class="button" type="success" size="small">退出系统</Button>
+            <Button class="button" type="success" size="small" @click="logoout">退出系统</Button>
             <Button class="button" type="success" size="small" @click="modalVal = true">修改密码</Button>
           </div>
         </div>
@@ -26,8 +26,12 @@
         @on-ok="updatePWD"
         :mask-closable="false">
         <div class="modalContent">
-          <Input v-model="userName" disabled style="width: 200px;display: block;margin: 10px" />
-          <Input v-model="password" placeholder="输入你要修改的密码..." style="width: 200px;display: block;margin: 10px" />
+          <span>用户名:</span>
+          <Input :value="username" disabled style="width: 200px;display: block;margin: 10px" />
+          <span>老密码:</span>
+          <Input v-model="oldPassword" placeholder="输入你之前的密码..." style="width: 200px;display: block;margin: 10px" />
+          <span>新密码:</span>
+          <Input v-model="newPassword" placeholder="输入你要修改的密码..." style="width: 200px;display: block;margin: 10px" />
         </div>
     </Modal>
   </div>
@@ -37,6 +41,7 @@
 import { mapState } from 'vuex'
 import LeftSide from '@_com/leftSide/leftSide.vue'
 import Header from '@_com/header/header.vue'
+import { logout, updatePwd } from '@/api'
 
 export default {
   name: 'App',
@@ -46,8 +51,9 @@ export default {
   },
   data () {
     return {
-      userName: '',
-      password: '',
+      username: '',
+      oldPassword: '',
+      newPassword: '',
       modalVal: false
     }
   },
@@ -64,12 +70,32 @@ export default {
   },
 
   created () {
-
+    this.username = window.localStorage.getItem('username')
   },
 
   methods: {
+    logoout () {
+      let token = localStorage.getItem('token')
+      this.$Message.loading({
+        content: '退出登陆中!',
+        duration: 0
+      })
+      logout({
+        token: token
+      }).then(res => {
+        this.$Message.destroy()
+        this.$router.push({
+          path: '/login'
+        })
+      })
+    },
     updatePWD () {
-
+      let token = localStorage.getItem('token')
+      updatePwd({
+        newPassword: this.newPassword,
+        oldPassword: this.oldPassword,
+        token: token
+      })
     }
   }
 }

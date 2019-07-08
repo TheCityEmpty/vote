@@ -38,7 +38,7 @@
               “{{ modalName }}” 的访问链接和二维码（微信扫描进入）
               <template slot="desc">
                 <p style="color:#ed4014;font-size: 16px;font-weight: 600;padding-left: 20px;">
-                  http://www.luoxuehui.com
+                  {{ link }}
                 </p>
               </template>
           </Alert>
@@ -64,6 +64,7 @@ export default {
   },
   data () {
     return {
+      link: '',
       modalVal: false,
       tableColumns: [
         {
@@ -80,7 +81,7 @@ export default {
         {
           title: '标题',
           key: 'name',
-          minWidth: 300,
+          minWidth: 200,
           render: (h, param) => {
             // true 为 开启   false 为 关闭
             let status = Number(param.row.activityType) === 1
@@ -164,7 +165,7 @@ export default {
             return (<div class="btns">
               <Button size="small" onClick={ () => { this.editActivity(param.row.id) } }>编辑</Button>
               <Button size="small" onClick={ () => { this.deleteActivity(param.row.id) } }>删除</Button>
-              <Button size="small" onClick={ () => { this.mackqrcode(param.row.name) } }>链接</Button>
+              <Button size="small" onClick={ () => { this.mackqrcode(param.row) } }>链接</Button>
               <Button size="small" onClick={ () => { this.cloneActivity(param.row.id) } }>复制</Button>
               <Button size="small" onClick={ () => { this.gotoSignUp(param.row) } }>报名</Button>
               <Button size="small">投票</Button>
@@ -207,10 +208,12 @@ export default {
       })
     },
 
-    mackqrcode (name) {
+    mackqrcode (row) {
+      // http://www.luoxuehui.com/m1Index?id=1145697717582823424
       this.modalVal = true
-      this.modalName = name
-      this.qrcode.makeCode('http://www.luoxuehui.com/vote')
+      this.modalName = row.name
+      this.qrcode.makeCode(`http://www.luoxuehui.com/m1Index${row.model}?id=${row.id}`)
+      this.link = `http://www.luoxuehui.com/m1Index${row.model}?id=${row.id}`
     },
 
     search () {

@@ -84,6 +84,21 @@ export const addSignUpUser = (params) => {
   return getHttp('/createSignUpUser', params, 'post')
 }
 
+// 退出登录
+export const logout = (params) => {
+  return getHttp('/logout', params, 'post')
+}
+
+// 修改密码
+export const updatePwd = (params) => {
+  return getHttp('/updatePwd', params, 'post')
+}
+
+//  首页概况
+export const queryStatistics = (params) => {
+  return getHttp('/queryStatistics', params, 'get')
+}
+
 function getHttp (url, data, type) {
   let token = localStorage.getItem('token')
   let p = {}

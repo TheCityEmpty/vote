@@ -39,6 +39,7 @@ import './vote.scss'
 import axios from 'axios'
 import TableList from '@_com/tableList'
 import { queryVoteList, getAllActivity } from '@/api'
+import { timeStampToDate } from '@/libs/tools.js'
 export default {
   name: 'signUp',
   components: {
@@ -67,26 +68,38 @@ export default {
         {
           title: '报名商家电话',
           key: 'signUpUserPhone',
-          minWidth: 200
+          minWidth: 100
         },
         {
           title: '投票时间',
           key: 'time',
-          minWidth: 200
+          minWidth: 200,
+          render: (h, param) => {
+            return (<div>
+              { timeStampToDate(param.row.time) }
+            </div>)
+          }
         },
         {
           title: '投票人微信名称',
           key: 'memberName',
-          minWidth: 200
+          minWidth: 100
+        },
+        {
+          title: '投票类型',
+          key: 'ticketType',
+          minWidth: 100,
+          render: (h, param) => {
+            return (<div>
+              { Number(param.row.ticketType === 0) ? '每日票' : '钻石' }
+            </div>)
+          }
+        },
+        {
+          title: '投票数量',
+          key: 'sum',
+          minWidth: 100
         }
-        // {
-        //   title: '操作',
-        //   width: 70,
-        //   fixed: 'right',
-        //   render: (h, param) => {
-        //     return (<Button size="small" onClick={ () => { this.deleteVoteRecord(param.row.id) } }>删除</Button>)
-        //   }
-        // }
       ],
       tableData: [],
       pageParams: {},
@@ -159,6 +172,7 @@ export default {
         length: 10,
         page: cpage
       }).then(res => {
+        this.tableData = res.data.list
         this.pageParams = {
           count: res.data.totalRows,
           rows: 10

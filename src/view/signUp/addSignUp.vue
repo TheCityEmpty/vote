@@ -160,6 +160,11 @@ export default {
       })
     },
     submit () {
+      if (!this.activityId || !this.name || !this.phone || !this.virtualTicket || !this.address ||
+      !this.content || !this.img.length || !this.signType) {
+        this.$Message.warning('请全部填写')
+        return
+      }
       let params = {
         activityId: this.activityId,
         name: this.name,

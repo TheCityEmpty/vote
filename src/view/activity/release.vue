@@ -220,21 +220,20 @@ export default {
     }
   },
 
-  mounted () {
+  created () {
     let id = this.$route.query.id
     let type = this.$route.query.type
     if (id) {
       // type 为2 编辑  为1 复制活动
-      if (type === 2) {
-        this.pageType = !!id
+      if (Number(type) === 2) {
+        this.pageType = true
+      } else {
+        this.pageType = false
       }
       this.queryActivity(id)
+    } else {
+      this.pageType = false
     }
-  },
-  computed: {
-    // editor () {
-    //   return this.$refs.myQuillEditor.quill
-    // }
   },
 
   methods: {
@@ -310,17 +309,25 @@ export default {
         name: this.name,
         note: this.note,
         content: this.content,
-        imgs: this.imgs,
+        img: this.imgs,
         notice: this.notice,
         activityStartTime: dateToTimeStamp(this.activityStartTime),
         activityEndTime: dateToTimeStamp(this.activityEndTime),
         voteStartTime: dateToTimeStamp(this.voteStartTime),
-        voteEndTime: dateToTimeStamp(this.voteStartTime),
+        voteEndTime: dateToTimeStamp(this.voteEndTime),
         adImg: this.adImg.map(item => item.val),
         model: this.model,
         rule: this.rule,
         prize: this.prize
       }
+      console.log(params)
+      if (!this.name || !this.note || !this.content || !this.imgs.length || !this.notice || !this.activityStartTime ||
+      !this.activityEndTime || !this.voteStartTime || !this.voteEndTime || !this.adImg.length || !this.model ||
+      !this.rule || !this.prize) {
+        this.$Message.warning('请全部填写')
+        return
+      }
+
       this.$Modal.confirm({
         content: `是否${this.pageType ? '修改' : '提交'}该活动？`,
         onOk: () => {

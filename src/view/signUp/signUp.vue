@@ -66,6 +66,26 @@
           <Button v-show="activityId" type="primary" style="display: block;margin: 20px 0;" @click="upload">提交导入数据</Button>
         </div>
     </Modal>
+
+    <!-- Modal -->
+    <Modal
+        title="链接"
+        v-model="modalVal"
+        :mask-closable="false">
+        <div class="modalContent">
+           <Alert type="success">
+              “{{ modalName }}” 的访问链接和二维码（微信扫描进入）
+              <template slot="desc">
+                <p style="color:#ed4014;font-size: 16px;font-weight: 600;padding-left: 20px;">
+                  {{ link }}
+                </p>
+              </template>
+          </Alert>
+          <div style="width: 200px;height: 200px;">
+            <div id="qrcode" ref="qrcode"></div>
+          </div>
+        </div>
+    </Modal>
   </div>
 </template>
 
@@ -76,6 +96,7 @@ import TableList from '@_com/tableList'
 import { getAllActivity, getSignUpUse, deleteSignUpUser, updateSignUpUser, getActivitySignUp } from '@/api'
 import { Button, InputNumber } from 'iview'
 import { timeStampToDate } from '@/libs/tools.js'
+import QRCode from 'qrcodejs2'
 export default {
   name: 'signUp',
   components: {
@@ -83,6 +104,9 @@ export default {
   },
   data () {
     return {
+      modalName: '',
+      link: '',
+      modalVal: false,
       activityId: '',
       activitys: [],
       uploadinng: false,
@@ -177,7 +201,7 @@ export default {
             return (<div class="btns">
               <Button size="small" onClick={ () => { this.editSignUp(param.row.id) } }>编辑</Button>
               <Button size="small" onClick={ () => { this.deleteSignUp(param.row.id) } }>删除</Button>
-              <Button size="small">链接</Button>
+              <Button size="small" onClick={ () => { this.mackqrcode(param.row) } }>链接</Button>
             </div>)
           }
         }
@@ -192,7 +216,8 @@ export default {
       virtualTicket: '',
       aname: '',
       modalShow: false,
-      files: []
+      files: [],
+      qrcode: null
     }
   },
 
@@ -208,8 +233,29 @@ export default {
     this.aname = this.$route.query.name
     this.routerInit(id)
   },
+  mounted () {
+    this.initqrcode()
+  },
 
   methods: {
+
+    initqrcode () {
+      this.qrcode = new QRCode('qrcode', {
+        width: 132,
+        height: 132,
+        text: '', // 需要二维码跳转的地址
+        colorDark: '#000000', // 前景色
+        colorLight: '#ffffff' // 背景色
+      })
+    },
+
+    mackqrcode (row) {
+      // http://www.luoxuehui.com/m1Index?id=1145697717582823424
+      this.modalVal = true
+      this.modalName = row.name
+      this.qrcode.makeCode(`http://www.luoxuehui.com/info?id=${row.activity}&uid=${row.id}`)
+      this.link = `http://www.luoxuehui.com/info?id=${row.activity}&uid=${row.id}`
+    },
 
     exportVote () {
       let formData = new FormData()

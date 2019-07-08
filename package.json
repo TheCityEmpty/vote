@@ -13,6 +13,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "babel-polyfill": "^6.26.0",
+    "echarts": "^4.2.1",
     "iview": "3.4.1",
     "iview-editor": "^1.1.1",
     "js-md5": "^0.7.3",

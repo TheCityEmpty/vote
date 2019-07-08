@@ -44,6 +44,11 @@ export default {
     return {
       menus: [
         {
+          title: '概况',
+          icon: 'ios-stats',
+          to: '/chart'
+        },
+        {
           title: '活动管理',
           icon: 'md-beer',
           to: '/activity'
