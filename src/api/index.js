@@ -99,6 +99,26 @@ export const queryStatistics = (params) => {
   return getHttp('/queryStatistics', params, 'get')
 }
 
+// 任务
+export const batchAddTask = (params) => {
+  return getHttp('/batchAddTask', params, 'post')
+}
+
+// batchDeleteTask 删除任务
+export const batchDeleteTask = (params) => {
+  return getHttp('/batchDeleteTask', params, 'post')
+}
+
+// 批量删除报名人
+export const deleteSignUpUserByList = (params) => {
+  return getHttp('/deleteSignUpUserByList', params, 'post')
+}
+
+// selectVoteCase
+export const selectVoteCase = (params) => {
+  return getHttp('/selectVoteCase', params, 'post')
+}
+
 function getHttp (url, data, type) {
   let token = localStorage.getItem('token')
   let p = {}

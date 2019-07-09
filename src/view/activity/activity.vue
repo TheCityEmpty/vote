@@ -2,7 +2,6 @@
   <div class="article-box">
     <BreadcrumbBox title="活动管理"></BreadcrumbBox>
     <div class="box_wrap" style="margin-bottom: 20px;">
-      <Button type="primary" :to="{ path: '/release' }">发布活动</Button>
       <RadioGroup v-model="activityStatus" @on-change="radioGroupChange" type="button" style="margin: 0 20px;">
         <Radio label="">所有</Radio>
         <Radio :label="0">未开始</Radio>
@@ -70,18 +69,18 @@ export default {
         {
           title: '图片',
           key: 'img',
-          minWidth: 100,
+          minWidth: 70,
           render: (h, param) => {
             let imgs = JSON.parse(param.row.img)
             return (<div style="padding: 5px;">
-              <img src={ imgs[0] } style="width: 100px;height: 100px;" />
+              <img src={ imgs[0] } style="width: 70px;height: 70px;" />
             </div>)
           }
         },
         {
           title: '标题',
           key: 'name',
-          minWidth: 200,
+          minWidth: 240,
           render: (h, param) => {
             // true 为 开启   false 为 关闭
             let status = Number(param.row.activityType) === 1
@@ -102,14 +101,9 @@ export default {
           }
         },
         {
-          title: '报名数量',
-          key: 'voteSum',
-          minWidth: 100
-        },
-        {
           title: '活动时间',
           key: 'activityTime',
-          minWidth: 210,
+          minWidth: 150,
           render: (h, param) => {
             return (<div style={ param.row.activityType === 1 ? 'background:#A3E4D7;padding: 3px;' : 'background:#F5B7B1;padding: 3px;' }>
               <p>开始:{ timeStampToDate(param.row.activityStartTime) }</p>
@@ -120,9 +114,9 @@ export default {
         {
           title: '投票时间',
           key: 'voteTime',
-          minWidth: 210,
+          minWidth: 150,
           render: (h, param) => {
-            return (<div>
+            return (<div style="padding: 3px;">
               <p>开始:{ timeStampToDate(param.row.voteStartTime) }</p>
               <p>结束:{ timeStampToDate(param.row.voteEndTime) }</p>
             </div>)
@@ -131,19 +125,22 @@ export default {
         {
           title: '钻石数',
           key: 'diamonds',
-          minWidth: 100
+          minWidth: 80
         },
         {
           title: '实票数',
           key: 'realTicket',
-          minWidth: 100
+          minWidth: 80
         },
+
         {
-          title: '备注',
-          key: 'note',
-          minWidth: 150,
+          title: '操作',
+          width: 220,
+          fixed: 'right',
           render: (h, param) => {
-            return (<div>
+            return (<div class="btns">
+              <div>
+              备注:
               <Input
                 onOn-change={ (event) => { this.remarkValChange(event) } }
                 size="small"
@@ -154,21 +151,13 @@ export default {
                 size="small"
                 type="primary"
                 style="margin-left: 3px;">改</Button>
-            </div>)
-          }
-        },
-        {
-          title: '操作',
-          width: 250,
-          fixed: 'right',
-          render: (h, param) => {
-            return (<div class="btns">
+              </div>
               <Button size="small" onClick={ () => { this.editActivity(param.row.id) } }>编辑</Button>
               <Button size="small" onClick={ () => { this.deleteActivity(param.row.id) } }>删除</Button>
               <Button size="small" onClick={ () => { this.mackqrcode(param.row) } }>链接</Button>
               <Button size="small" onClick={ () => { this.cloneActivity(param.row.id) } }>复制</Button>
               <Button size="small" onClick={ () => { this.gotoSignUp(param.row) } }>报名</Button>
-              <Button size="small">投票</Button>
+              <Button size="small" onClick={ () => { this.gotoVote(param.row) } }>投票</Button>
             </div>)
           }
         }
@@ -191,9 +180,16 @@ export default {
 
   methods: {
 
+    gotoVote (row) {
+      this.$router.push({
+        path: '/activeVote',
+        query: { id: row.id, name: row.name }
+      })
+    },
+
     gotoSignUp (row) {
       this.$router.push({
-        path: '/signUp',
+        path: '/activeSignUp',
         query: { id: row.id, name: row.name }
       })
     },

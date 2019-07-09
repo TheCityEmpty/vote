@@ -1,19 +1,10 @@
 <template>
 	<div class="vote-box">
 		<BreadcrumbBox title="投票管理"></BreadcrumbBox>
+		<Alert>活动名称:{{ $route.query.name }}</Alert>
     <div class="box_wrap btns" style="margin-bottom: 20px;">
-      <!-- <Button type="primary" @click="exportVote">导出所有</Button> -->
+      <Button type="primary" @click="exportVote">导出所有</Button>
       <!-- <Button type="primary">批量删除</Button> -->
-      <p class="lxh-title-2">活动标题：</p>
-      <Select v-model="activityId" style="width:400px;margin: 30px 0;">
-        <Option v-for="item in activitys" :label="item.name" :value="item.id" :key="item.id">
-          <div>
-            <img class="img-avtor" :src="item.img" />
-            <span class="active-name" :title="item.name">{{ item.name }}</span>
-          </div>
-        </Option>
-      </Select>
-      <br />
       <p class="lxh-title-2">时间范围：</p>
       <DatePicker type="daterange" v-model="voteTime" placement="bottom-end" placeholder="Select date" style="width: 200px"></DatePicker>
       <Button type="primary" style="margin-left: 30px;" @click="selectVoteCase">搜索</Button>
@@ -37,7 +28,7 @@
 import './vote.scss'
 import axios from 'axios'
 import TableList from '@_com/tableList'
-import { queryVoteList, getAllActivity, selectVoteCase } from '@/api'
+import { queryVoteList, selectVoteCase } from '@/api'
 import { timeStampToDate, dateToTimeStamp } from '@/libs/tools.js'
 export default {
   name: 'signUp',
@@ -110,14 +101,13 @@ export default {
 
   created () {
     this.queryVoteList(this.cpage)
-    this.getAllActivityName()
   },
 
   methods: {
 
     selectVoteCase () {
       let p = {
-        activityId: this.activityId,
+        activityId: this.$route.query.id,
         voteStartTime: dateToTimeStamp(this.voteTime[0]),
         voteEndTime: dateToTimeStamp(this.voteTime[1])
       }
@@ -138,7 +128,9 @@ export default {
     exportVote () {
       let formData = new FormData()
       let token = localStorage.getItem('token')
+      let aid = this.$route.query.id
       formData.append('token', token)
+      formData.append('activityId', aid)
       axios.post('http://www.luoxuehui.com/app/exportVote', formData, {
         timeout: 10000,
         responseType: 'arraybuffer',
@@ -167,28 +159,9 @@ export default {
         }
       })
     },
-    getAllActivityName () {
-      getAllActivity({
-        length: 100,
-        page: 1
-      }).then(res => {
-        let tableData = (res.data.list || []).map(item => {
-          return {
-            ...item,
-            ...item.activity
-          }
-        })
-        this.activitys = tableData.map(item => {
-          return {
-            img: JSON.parse(item.img)[0],
-            name: item.name,
-            id: item.id
-          }
-        })
-      })
-    },
     queryVoteList (cpage) {
       queryVoteList({
+        activityId: this.$route.query.id,
         length: 10,
         page: cpage
       }).then(res => {

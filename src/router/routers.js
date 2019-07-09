@@ -29,11 +29,16 @@ export default [
         name: 'release',
         component: () => import(/* webpackChunkName: "release" */'@/view/activity/release')
       },
-      // {
-      //   path: '/activitySignUp',
-      //   name: 'activitySignUp',
-      //   component: () => import(/* webpackChunkName: "activitySignUp" */'@/view/activity/signUp')
-      // },
+      {
+        path: '/activeVote',
+        name: 'activeVote',
+        component: () => import(/* webpackChunkName: "activeVote" */'@/view/activity/activeVote')
+      },
+      {
+        path: '/activeSignUp',
+        name: 'activeSignUp',
+        component: () => import(/* webpackChunkName: "activeSignUp" */'@/view/activity/activeSignUp')
+      },
       {
         path: '/signUp',
         name: 'signUp',

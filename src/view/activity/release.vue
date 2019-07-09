@@ -43,7 +43,7 @@
 
       <!-- <p class="lxh-title-2">虚拟人气设置：</p>
 			<Input v-model="remark" class="input-block"></Input> -->
-
+      <p>选择时间的时候请选择正确的时间，活动结束时间必须大于活动开始时间，投票结束时间必须大于投票开始时间（否则活动不一定能按期开始）  </p>
       <div class="date">
         <div class="date-list">
           <p class="lxh-title-2">活动开始时间：</p>

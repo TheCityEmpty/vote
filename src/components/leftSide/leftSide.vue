@@ -54,9 +54,9 @@ export default {
           to: '/activity'
         },
         {
-          title: '自主报名管理',
-          icon: 'ios-people',
-          to: '/signUp'
+          title: '发布活动',
+          icon: 'md-add',
+          to: '/release'
         },
         {
           title: '投票管理',

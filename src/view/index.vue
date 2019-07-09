@@ -42,6 +42,7 @@ import { mapState } from 'vuex'
 import LeftSide from '@_com/leftSide/leftSide.vue'
 import Header from '@_com/header/header.vue'
 import { logout, updatePwd } from '@/api'
+import md5 from 'js-md5'
 
 export default {
   name: 'App',
@@ -91,10 +92,14 @@ export default {
     },
     updatePWD () {
       let token = localStorage.getItem('token')
+      let newP = md5(this.newPassword)
+      let oldP = md5(this.oldPassword)
       updatePwd({
-        newPassword: this.newPassword,
-        oldPassword: this.oldPassword,
+        newPassword: newP,
+        oldPassword: oldP,
         token: token
+      }).then(res => {
+        this.$Message.info('修改密码成功！')
       })
     }
   }
