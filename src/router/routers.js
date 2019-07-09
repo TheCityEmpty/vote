@@ -11,7 +11,7 @@ export default [
     //     return '/myStaying'
     //   }
     // },
-    redirect: '/activity',
+    redirect: '/chart',
     component: index,
     children: [
       {

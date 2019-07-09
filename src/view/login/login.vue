@@ -68,7 +68,7 @@ export default {
               content: '登录成功',
               onClose () {
                 self.$router.push({
-                  path: '/activity'
+                  path: '/chart'
                 })
                 this.logining = false
               }
