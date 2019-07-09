@@ -15,7 +15,7 @@
 			<Input v-model="name" class="input-block"></Input>
 
 			<p class="lxh-title-2">虚拟票数：</p>
-			<Input v-model="virtualTicket" class="input-block"></Input>
+			<InputNumber :min="0" style="display: block;width: 100%;" :precision="0" v-model="virtualTicket" class="input-block"></InputNumber>
 
 			<p class="lxh-title-2">手机号：</p>
 			<Input v-model="phone" class="input-block"></Input>
@@ -113,7 +113,8 @@ export default {
       widthUnit: 'px',
       heightUnit: 'px',
       width: '',
-      height: ''
+      height: '',
+      info: {}
     }
   },
 
@@ -150,6 +151,7 @@ export default {
     getOneSignUpUser (id) {
       getOneSignUpUser({ id: id }).then(result => {
         let res = result.data
+        this.info = res.signUpUser
         this.activityId = res.signUpUser.activity
         this.name = res.signUpUser.userName
         this.virtualTicket = res.signUpUser.virtualTicket
@@ -160,8 +162,8 @@ export default {
       })
     },
     submit () {
-      if (!this.activityId || !this.name || !this.phone || !this.virtualTicket || !this.address ||
-      !this.content || !this.img.length || !this.signType) {
+      if (!this.activityId || !this.name || !this.phone || !this.address ||
+      !this.content || !this.img.length) {
         this.$Message.warning('请全部填写')
         return
       }
@@ -173,7 +175,8 @@ export default {
         address: this.address,
         content: this.content,
         img: this.img.map(item => item.val),
-        signType: Number(this.$route.query.signType)
+        signType: this.info.signType,
+        checkStatus: this.info.checkStatus
       }
       console.log(params)
       this.$Modal.confirm({

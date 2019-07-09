@@ -26,7 +26,6 @@ export const http = axios.create({
 
 // 请求前的钩子函数
 http.interceptors.request.use(function (config) {
-  console.log(config)
   if (config.url !== '/app/login' && !localStorage.getItem('token')) {
     Message.error('登录过期!')
     router.push({

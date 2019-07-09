@@ -376,8 +376,8 @@ export default {
       // http://www.luoxuehui.com/m1Index?id=1145697717582823424
       this.modalVal = true
       this.modalName = row.name
-      this.qrcode.makeCode(`http://www.luoxuehui.com/info?id=${row.activity}&uid=${row.id}`)
-      this.link = `http://www.luoxuehui.com/info?id=${row.activity}&uid=${row.id}`
+      this.qrcode.makeCode(`http://www.luoxuehui.com/info1?id=${row.activity}&uid=${row.id}`)
+      this.link = `http://www.luoxuehui.com/info1?id=${row.activity}&uid=${row.id}`
     },
 
     exportVote () {
@@ -485,8 +485,7 @@ export default {
         length: 10,
         page: cpage,
         status: 0,
-        activityId: id,
-        signType: 1
+        activityId: id
       }).then(res => {
         this.tableData = (res.data.list || []).map(item => {
           return {
@@ -511,8 +510,7 @@ export default {
         content: row.content,
         img: JSON.parse(row.img),
         checkStatus: status,
-        signType: this.aname ? 1 : 0
-
+        signType: row.signType
       }
       updateSignUpUser({
         ...params,
@@ -535,12 +533,12 @@ export default {
         virtualTicket: this.virtualTicket,
         address: row.address,
         content: row.content,
-        img: JSON.parse(row.img)
+        img: JSON.parse(row.img),
+        signType: row.signType
       }
       updateSignUpUser({
         ...params,
-        id: row.id,
-        signType: this.aname ? 1 : 0
+        id: row.id
       }).then(res => {
         this.$Message.info(`修改票数成功`)
         this.getSignUpUse(this.cpage)
@@ -577,7 +575,7 @@ export default {
     editSignUp (id) {
       this.$router.push({
         path: '/addSignUp',
-        query: { id: id, signType: this.aname ? 1 : 0 }
+        query: { id: id }
       })
     },
     updatePage (cpage) {
@@ -591,8 +589,7 @@ export default {
         ...p,
         virtualTicket: 1,
         status: 0,
-        activityId: this.$route.query.id,
-        signType: 1
+        activityId: this.$route.query.id
       }).then(res => {
         this.tableData = (res.data.list || []).map(item => {
           return {

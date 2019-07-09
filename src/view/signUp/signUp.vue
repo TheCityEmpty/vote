@@ -253,8 +253,8 @@ export default {
       // http://www.luoxuehui.com/m1Index?id=1145697717582823424
       this.modalVal = true
       this.modalName = row.name
-      this.qrcode.makeCode(`http://www.luoxuehui.com/info?id=${row.activity}&uid=${row.id}`)
-      this.link = `http://www.luoxuehui.com/info?id=${row.activity}&uid=${row.id}`
+      this.qrcode.makeCode(`http://www.luoxuehui.com/info1?id=${row.activity}&uid=${row.id}`)
+      this.link = `http://www.luoxuehui.com/info1?id=${row.activity}&uid=${row.id}`
     },
 
     exportVote () {
