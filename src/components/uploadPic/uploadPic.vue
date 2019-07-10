@@ -7,13 +7,13 @@
           <img :src="base64Img" v-if="base64Img" />
           <Icon type="md-image" v-else />
         </div>
-        <button class="upload" @click="upload">上传</button>
+        <button class="upload" @click="upload(0)">上传</button>
         <button class="remove" @click="remove">移除</button>
         <input type="file" ref="file" @change="changeImage($event)">
       </div>
     </template>
     <template v-else>
-      <div class="addImg" @click="upload">
+      <div class="addImg" @click="upload(0)">
         <Icon type="md-camera" />
         <span>添加图片</span>
         <input type="file" ref="file" multiple="multiple" @change="changeImages($event)">
@@ -55,7 +55,8 @@ export default {
   data () {
     return {
       base64Img: '',
-      base64Imgs: []
+      base64Imgs: [],
+      type: ''
     }
   },
 
@@ -130,7 +131,13 @@ export default {
       this.base64Img = ''
       this.$emit('removeSingleImgBase64')
     },
-    upload () {
+    upload (type) {
+      // 若为 编辑器使用 不限制数量
+      if (type && type.indexOf('editor') !== -1) {
+        this.type = type
+        this.$refs.file.click()
+        return
+      }
       if (this.base64Img || this.base64Imgs.length > 5) {
         this.$Message.warning('已上传图片，请移除图片后再次上传！')
         return
@@ -153,7 +160,14 @@ export default {
       // onloadend 为异步函数 解析图片 成base 64位的图片 用fileReader的readAsDataURL 去读本地图片对象
       reader.onloadend = (e) => {
         this.base64Img = e.target.result
-        this.$emit('getSingleImgBase64', JSON.parse(JSON.stringify(this.base64Img)))
+        if (this.type.indexOf('editor') !== -1) {
+          this.$emit('getSingleImgBase64', {
+            type: this.type,
+            base: JSON.parse(JSON.stringify(this.base64Img))
+          })
+        } else {
+          this.$emit('getSingleImgBase64', JSON.parse(JSON.stringify(this.base64Img)))
+        }
       }
     }
   }

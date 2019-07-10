@@ -180,7 +180,7 @@ export default {
         })
         this.activitys = tableData.map(item => {
           return {
-            img: JSON.parse(item.img)[0],
+            img: JSON.parse(item.img || '[]')[0],
             name: item.name,
             id: item.id
           }

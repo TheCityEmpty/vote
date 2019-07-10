@@ -119,6 +119,11 @@ export const selectVoteCase = (params) => {
   return getHttp('/selectVoteCase', params, 'post')
 }
 
+// base 64 转 src
+export const putImg = (params) => {
+  return getHttp('/putImg', params, 'post')
+}
+
 function getHttp (url, data, type) {
   let token = localStorage.getItem('token')
   let p = {}

@@ -137,6 +137,7 @@ import { getAllActivity, getSignUpUse, deleteSignUpUserByList, deleteSignUpUser,
 import { Button, InputNumber } from 'iview'
 import { timeStampToDate, dateToTimeStamp } from '@/libs/tools.js'
 import QRCode from 'qrcodejs2'
+
 export default {
   name: 'signUp',
   components: {
@@ -184,7 +185,7 @@ export default {
           key: 'img',
           minWidth: 100,
           render: (h, param) => {
-            let imgs = JSON.parse(param.row.img)
+            let imgs = JSON.parse(param.row.img || '[]')
             return (<div style="padding: 5px;">
               <img src={ imgs[0] } style="width: 100px;height: 100px;" />
             </div>)
@@ -426,9 +427,9 @@ export default {
       for (let i = 0, len = this.files.length; i < len; i++) {
         formData.append(`file${i}`, this.files[i])
       }
-      formData.append('activityId', this.activityId)
-      let token = localStorage.getItem('token')
-      formData.append('token', token)
+      formData.append('id', this.activityId)
+      // let token = localStorage.getItem('token')
+      // formData.append('token', token)
       this.uploadinng = true
       axios.post('http://www.luoxuehui.com/app/zipUpLoad', formData, {
         timeout: 10000,
@@ -511,7 +512,7 @@ export default {
         virtualTicket: row.virtualTicket,
         address: row.address,
         content: row.content,
-        img: JSON.parse(row.img),
+        img: JSON.parse(row.img || '[]'),
         checkStatus: status,
         signType: row.signType
       }
@@ -536,7 +537,7 @@ export default {
         virtualTicket: this.virtualTicket,
         address: row.address,
         content: row.content,
-        img: JSON.parse(row.img),
+        img: JSON.parse(row.img || '[]'),
         signType: row.signType
       }
       updateSignUpUser({

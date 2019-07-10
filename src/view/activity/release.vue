@@ -92,9 +92,11 @@
       </Upload> -->
 
       <UploadPicBox
+        style="display: none;"
         title="缩略图"
         class="input-block"
-        @getSingleImgBase64="getSingleImgBase64">
+        ref="editePic"
+        @getSingleImgBase64="getEidImg">
       </UploadPicBox>
 
       <p class="lxh-title-2">投票活动规则填写：</p>
@@ -111,7 +113,8 @@
       <p class="lxh-title-2">奖品内容填写：</p>
       <quill-editor
         v-model.trim="prize"
-        :options="editorOption">
+        ref="myQuillEditor2"
+        :options="editorOption2">
         <!-- @blur="onEditorBlur($event)"
         @focus="onEditorFocus($event)"
         @ready="onEditorReady($event)"> -->
@@ -150,7 +153,7 @@
 import './activity.scss'
 import UploadPicBox from '@_com/uploadPic/uploadPic.vue'
 import { dateToTimeStamp, timeStampToDate } from '@/libs/tools.js'
-import { createActivity, queryActivity, updateActivity } from '@/api'
+import { createActivity, queryActivity, updateActivity, putImg } from '@/api'
 const toolbarOptions = [
   ['bold', 'italic', 'underline', 'strike'], // toggled buttons
   ['blockquote', 'code-block'],
@@ -187,8 +190,31 @@ export default {
           toolbar: {
             container: toolbarOptions, // 工具栏
             handlers: {
-              'image': function (value) {
-                console.log(value)
+              'image': (value) => {
+                if (value) {
+                  this.$refs['editePic'].upload('editor')
+                } else {
+                  console.log('aa')
+                }
+              }
+            }
+          }
+        }
+
+      },
+      editorOption2: {
+        placeholder: '请输入',
+        theme: 'snow',
+        modules: {
+          toolbar: {
+            container: toolbarOptions, // 工具栏
+            handlers: {
+              'image': (value) => {
+                if (value) {
+                  this.$refs['editePic'].upload('editor2')
+                } else {
+                  console.log('aa')
+                }
               }
             }
           }
@@ -285,6 +311,28 @@ export default {
   },
 
   methods: {
+
+    getEidImg (obj) {
+      console.log(obj)
+      putImg({
+        base: obj.base
+      }).then(res => {
+        if (String(res.code) !== '2') {
+          // 获取光标所在位置
+          let quill = null
+          if (obj.type === 'editor') {
+            quill = this.$refs.myQuillEditor.quill
+          } else {
+            quill = this.$refs.myQuillEditor2.quill
+          }
+          let length = quill.getSelection().index
+          // 插入图片，res.data为服务器返回的图片链接地址
+          quill.insertEmbed(length, 'image', res.data)
+          // 调整光标到最后
+          quill.setSelection(length + 1)
+        }
+      })
+    },
     queryActivity (id) {
       queryActivity({ id: id }).then(result => {
         let res = result.data

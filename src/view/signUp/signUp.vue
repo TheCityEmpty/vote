@@ -128,7 +128,7 @@ export default {
           key: 'img',
           minWidth: 100,
           render: (h, param) => {
-            let imgs = JSON.parse(param.row.img)
+            let imgs = JSON.parse(param.row.img || '[]')
             return (<div style="padding: 5px;">
               <img src={ imgs[0] } style="width: 100px;height: 100px;" />
             </div>)
@@ -341,7 +341,7 @@ export default {
         })
         this.activitys = tableData.map(item => {
           return {
-            img: JSON.parse(item.img)[0],
+            img: JSON.parse(item.img || '[]')[0],
             name: item.name,
             id: item.id
           }
@@ -399,7 +399,7 @@ export default {
         virtualTicket: row.virtualTicket,
         address: row.address,
         content: row.content,
-        img: JSON.parse(row.img),
+        img: JSON.parse(row.img || '[]'),
         checkStatus: status,
         signType: this.aname ? 1 : 0
 
@@ -425,7 +425,7 @@ export default {
         virtualTicket: this.virtualTicket,
         address: row.address,
         content: row.content,
-        img: JSON.parse(row.img)
+        img: JSON.parse(row.img || '[]')
       }
       updateSignUpUser({
         ...params,

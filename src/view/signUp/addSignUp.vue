@@ -77,6 +77,25 @@
 import './signUp.scss'
 import { addSignUpUser, getAllActivity, getOneSignUpUser, updateSignUpUser } from '@/api'
 import UploadPicBox from '@_com/uploadPic/uploadPic.vue'
+const toolbarOptions = [
+  ['bold', 'italic', 'underline', 'strike'], // toggled buttons
+  ['blockquote', 'code-block'],
+
+  [{ 'header': 1 }, { 'header': 2 }], // custom button values
+  [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+  [{ 'script': 'sub' }, { 'script': 'super' }], // superscript/subscript
+  [{ 'indent': '-1' }, { 'indent': '+1' }], // outdent/indent
+  [{ 'direction': 'rtl' }], // text direction
+
+  [{ 'size': ['small', false, 'large', 'huge'] }], // custom dropdown
+  [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+
+  [{ 'color': [] }, { 'background': [] }], // dropdown with defaults from theme
+  [{ 'font': [] }],
+  [{ 'align': [] }],
+  ['link', 'image', 'video'],
+  ['clean'] // remove formatting button
+]
 export default {
   name: 'addSignUp',
   components: {
@@ -86,7 +105,22 @@ export default {
     return {
       editorOption: {
         placeholder: '请输入',
-        theme: 'snow'
+        theme: 'snow',
+        modules: {
+          toolbar: {
+            container: toolbarOptions, // 工具栏
+            handlers: {
+              'image': (value) => {
+                if (value) {
+                  alert('此处宣言不可上传图片！')
+                } else {
+                  console.log('aa')
+                }
+              }
+            }
+          }
+        }
+
       },
       // forms start
       activityId: '',
@@ -251,7 +285,7 @@ export default {
         })
         this.activitys = tableData.map(item => {
           return {
-            img: JSON.parse(item.img)[0],
+            img: JSON.parse(item.img || '[]')[0],
             name: item.name,
             id: item.id
           }
