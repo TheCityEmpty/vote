@@ -80,6 +80,23 @@
         </Select>
       </div>
 
+      <!-- <Upload
+        :show-upload-list="false"
+        :on-success="handleSuccess"
+        :format="['jpg','jpeg','png','gif']"
+        :max-size="2048"
+        multiple
+        action="/file/upload"
+        >
+        <Button icon="ios-cloud-upload-outline" ></Button>
+      </Upload> -->
+
+      <UploadPicBox
+        title="缩略图"
+        class="input-block"
+        @getSingleImgBase64="getSingleImgBase64">
+      </UploadPicBox>
+
       <p class="lxh-title-2">投票活动规则填写：</p>
       <quill-editor
         class="input-block"
@@ -129,10 +146,30 @@
 </template>
 
 <script>
+// 工具栏配置
 import './activity.scss'
 import UploadPicBox from '@_com/uploadPic/uploadPic.vue'
 import { dateToTimeStamp, timeStampToDate } from '@/libs/tools.js'
 import { createActivity, queryActivity, updateActivity } from '@/api'
+const toolbarOptions = [
+  ['bold', 'italic', 'underline', 'strike'], // toggled buttons
+  ['blockquote', 'code-block'],
+
+  [{ 'header': 1 }, { 'header': 2 }], // custom button values
+  [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+  [{ 'script': 'sub' }, { 'script': 'super' }], // superscript/subscript
+  [{ 'indent': '-1' }, { 'indent': '+1' }], // outdent/indent
+  [{ 'direction': 'rtl' }], // text direction
+
+  [{ 'size': ['small', false, 'large', 'huge'] }], // custom dropdown
+  [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+
+  [{ 'color': [] }, { 'background': [] }], // dropdown with defaults from theme
+  [{ 'font': [] }],
+  [{ 'align': [] }],
+  ['link', 'image', 'video'],
+  ['clean'] // remove formatting button
+]
 export default {
   components: {
     UploadPicBox
@@ -145,7 +182,18 @@ export default {
       height: '',
       editorOption: {
         placeholder: '请输入',
-        theme: 'snow'
+        theme: 'snow',
+        modules: {
+          toolbar: {
+            container: toolbarOptions, // 工具栏
+            handlers: {
+              'image': function (value) {
+                console.log(value)
+              }
+            }
+          }
+        }
+
       },
       // form start
       activityType: 1,
@@ -309,7 +357,7 @@ export default {
         name: this.name,
         note: this.note,
         content: this.content,
-        img: this.imgs,
+        imgs: this.imgs,
         notice: this.notice,
         activityStartTime: dateToTimeStamp(this.activityStartTime),
         activityEndTime: dateToTimeStamp(this.activityEndTime),

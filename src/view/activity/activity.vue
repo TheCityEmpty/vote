@@ -71,7 +71,7 @@ export default {
           key: 'img',
           minWidth: 70,
           render: (h, param) => {
-            let imgs = JSON.parse(param.row.img)
+            let imgs = JSON.parse(param.row.img || '[]')
             return (<div style="padding: 5px;">
               <img src={ imgs[0] } style="width: 70px;height: 70px;" />
             </div>)
