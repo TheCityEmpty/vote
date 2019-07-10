@@ -426,7 +426,9 @@ export default {
       for (let i = 0, len = this.files.length; i < len; i++) {
         formData.append(`file${i}`, this.files[i])
       }
-      formData.append('id', this.activityId)
+      formData.append('activityId', this.activityId)
+      let token = localStorage.getItem('token')
+      formData.append('token', token)
       this.uploadinng = true
       axios.post('http://www.luoxuehui.com/app/zipUpLoad', formData, {
         timeout: 10000,
