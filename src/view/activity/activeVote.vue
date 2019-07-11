@@ -132,7 +132,7 @@ export default {
       formData.append('token', token)
       formData.append('activityId', aid)
       axios.post('http://www.luoxuehui.com/app/exportVote', formData, {
-        timeout: 10000,
+        timeout: 10000 * 60,
         responseType: 'arraybuffer',
         headers: {
           'Content-Type': 'multipart/form-data'

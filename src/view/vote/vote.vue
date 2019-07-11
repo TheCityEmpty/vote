@@ -140,7 +140,7 @@ export default {
       let token = localStorage.getItem('token')
       formData.append('token', token)
       axios.post('http://www.luoxuehui.com/app/exportVote', formData, {
-        timeout: 10000,
+        timeout: 10000 * 60,
         responseType: 'arraybuffer',
         headers: {
           'Content-Type': 'multipart/form-data'

@@ -262,7 +262,7 @@ export default {
       let token = localStorage.getItem('token')
       formData.append('token', token)
       axios.post('http://www.luoxuehui.com/app/exportSignUpUser', formData, {
-        timeout: 10000,
+        timeout: 10000 * 60,
         responseType: 'arraybuffer',
         headers: {
           'Content-Type': 'multipart/form-data'
@@ -303,7 +303,7 @@ export default {
       formData.append('id', this.activityId)
       this.uploadinng = true
       axios.post('http://www.luoxuehui.com/app/zipUpLoad', formData, {
-        timeout: 10000,
+        timeout: 10000 * 60,
         headers: {
           'Content-Type': 'multipart/form-data'
         }

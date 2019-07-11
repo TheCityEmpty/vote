@@ -389,7 +389,7 @@ export default {
       formData.append('token', token)
       formData.append('activityId', aid)
       axios.post('http://www.luoxuehui.com/app/exportSignUpUser', formData, {
-        timeout: 10000,
+        // timeout: 100000 * 60 * 60,
         responseType: 'arraybuffer',
         headers: {
           'Content-Type': 'multipart/form-data'
@@ -432,7 +432,7 @@ export default {
       // formData.append('token', token)
       this.uploadinng = true
       axios.post('http://www.luoxuehui.com/app/zipUpLoad', formData, {
-        timeout: 10000,
+        timeout: 10000 * 60,
         headers: {
           'Content-Type': 'multipart/form-data'
         }

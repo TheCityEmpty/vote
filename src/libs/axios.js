@@ -12,7 +12,7 @@ export const baseURL = envConfig[process.env.NODE_ENV || 'development']
 
 export const http = axios.create({
   baseURL,
-  timeout: 100000,
+  timeout: 10000 * 60,
   headers: {
     common: {
       // 'X-Requested-With': 'XMLHttpRequest',
