@@ -398,23 +398,47 @@ export default {
       this.setFixedPosition('10000px', '10000px')
     },
     submit () {
-      let params = {
-        activityType: this.activityType,
-        giftStatus: this.giftStatus,
-        signUpStatus: this.signUpStatus,
-        name: this.name,
-        note: this.note,
-        content: this.content,
-        imgs: this.imgs,
-        notice: this.notice,
-        activityStartTime: dateToTimeStamp(this.activityStartTime),
-        activityEndTime: dateToTimeStamp(this.activityEndTime),
-        voteStartTime: dateToTimeStamp(this.voteStartTime),
-        voteEndTime: dateToTimeStamp(this.voteEndTime),
-        adImg: this.adImg.map(item => item.val),
-        model: this.model,
-        rule: this.rule,
-        prize: this.prize
+      let params = {}
+      // 修改
+      if (this.pageType) {
+        params = {
+          activityType: this.activityType,
+          giftStatus: this.giftStatus,
+          signUpStatus: this.signUpStatus,
+          name: this.name,
+          note: this.note,
+          content: this.content,
+          img: this.imgs,
+          notice: this.notice,
+          activityStartTime: dateToTimeStamp(this.activityStartTime),
+          activityEndTime: dateToTimeStamp(this.activityEndTime),
+          voteStartTime: dateToTimeStamp(this.voteStartTime),
+          voteEndTime: dateToTimeStamp(this.voteEndTime),
+          adImg: this.adImg.map(item => item.val),
+          model: this.model,
+          rule: this.rule,
+          prize: this.prize
+        }
+      } else {
+        // x新增
+        params = {
+          activityType: this.activityType,
+          giftStatus: this.giftStatus,
+          signUpStatus: this.signUpStatus,
+          name: this.name,
+          note: this.note,
+          content: this.content,
+          imgs: this.imgs,
+          notice: this.notice,
+          activityStartTime: dateToTimeStamp(this.activityStartTime),
+          activityEndTime: dateToTimeStamp(this.activityEndTime),
+          voteStartTime: dateToTimeStamp(this.voteStartTime),
+          voteEndTime: dateToTimeStamp(this.voteEndTime),
+          adImg: this.adImg.map(item => item.val),
+          model: this.model,
+          rule: this.rule,
+          prize: this.prize
+        }
       }
       console.log(params)
       if (!this.name || !this.note || !this.content || !this.imgs.length || !this.notice || !this.activityStartTime ||
