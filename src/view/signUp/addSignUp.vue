@@ -14,8 +14,8 @@
 			<p class="lxh-title-2">姓名：</p>
 			<Input v-model="name" class="input-block"></Input>
 
-			<p class="lxh-title-2">虚拟票数：</p>
-			<InputNumber :min="0" style="display: block;width: 100%;" :precision="0" v-model="virtualTicket" class="input-block"></InputNumber>
+			<!-- <p class="lxh-title-2">虚拟票数：</p> -->
+			<!-- <InputNumber :min="0" style="display: block;width: 100%;" :precision="0" v-model="virtualTicket" class="input-block"></InputNumber> -->
 
 			<p class="lxh-title-2">手机号：</p>
 			<Input v-model="phone" class="input-block"></Input>

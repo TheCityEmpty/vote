@@ -63,7 +63,10 @@
             action="/app/zipUpLoad">
             <Button type="primary" icon="ios-cloud-upload-outline">导入数据</Button>
           </Upload>
-          <p style="display: block;margin: 20px 0;" v-for="(item, index) in files" :key="index">{{ item.name }}</p>
+          <p style="display: block;margin: 20px 0;" v-for="(item, index) in files" :key="index">
+            {{ item.name }}
+            <Icon type="md-close" @click="deleteFile(index)" style="cursor: pointer;margin-left: 20px;font-weight: 600;color: #f00;" />
+          </p>
           <Button v-show="activityId" type="primary" style="display: block;margin: 20px 0;" @click="upload">提交导入数据</Button>
         </div>
     </Modal>
@@ -206,7 +209,7 @@ export default {
               <InputNumber
                 active-change={ false }
                 value= { null }
-                min={ param.row.virtualTicket }
+                min={ 0 }
                 onOn-change={ (val) => { this.virtualTicketValChange(val) } }
                 size="small"
                 style="width: 70px;"></InputNumber>
@@ -214,8 +217,7 @@ export default {
                 onClick={ () => { this.virtualTicketChange(param.row) } }
                 size="small"
                 type="primary"
-                style="margin-left: 3px;">改</Button>
-              <p style="font-size: 12px;color:rgb(230, 71, 55);">修改票数只能小于当前票数</p>
+                style="margin-left: 3px;">加</Button>
             </div>)
           }
         },
@@ -300,6 +302,7 @@ export default {
   },
 
   methods: {
+
     deleteTask (row, type) {
       batchDeleteTask({
         taskType: type,
@@ -355,6 +358,7 @@ export default {
     deleteSignUpUserByList () {
       if (!this.idlist.length) {
         this.$Message.warning('请先选择报名人！')
+        return
       }
       deleteSignUpUserByList({
         signUpUserIds: this.idlist
@@ -422,6 +426,10 @@ export default {
       return false
     },
 
+    deleteFile (index) {
+      this.files.splice(index, 1)
+    },
+
     upload () {
       let formData = new FormData()
       for (let i = 0, len = this.files.length; i < len; i++) {
@@ -454,6 +462,7 @@ export default {
 
     openModal () {
       this.modalShow = true
+      this.files = []
       this.getAllActivityName()
     },
 
@@ -526,25 +535,30 @@ export default {
     },
 
     virtualTicketValChange (val) {
-      this.virtualTicket = val
+      this.virtualTicket = Math.floor(val)
     },
 
     virtualTicketChange (row) {
+      if (!this.virtualTicket) {
+        this.$Message.warning('请输入你要加的票!')
+        return
+      }
       let params = {
         activityId: row.activity,
         name: row.userName,
         phone: row.phone,
-        virtualTicket: this.virtualTicket,
+        virtualTicket: this.virtualTicket + row.virtualTicket,
         address: row.address,
         content: row.content,
         img: JSON.parse(row.img || '[]'),
-        signType: row.signType
+        signType: row.signType,
+        checkStatus: row.checkStatus
       }
       updateSignUpUser({
         ...params,
         id: row.id
       }).then(res => {
-        this.$Message.info(`修改票数成功`)
+        this.$Message.info(`加票成功`)
         this.getSignUpUse(this.cpage)
       })
     },

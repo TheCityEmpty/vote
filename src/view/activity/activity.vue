@@ -311,12 +311,24 @@ export default {
     },
 
     getActivity (cpage) {
+      let p = {}
+      if (Number(this.activityStatus) !== 0 && !this.activityStatus) {
+        p = {
+          length: 10,
+          page: cpage,
+          name: this.name
+        }
+      } else {
+        p = {
+          length: 10,
+          page: cpage,
+          activityStatus: this.activityStatus,
+          name: this.name
+        }
+      }
       this.isLoading = true
       getAllActivity({
-        length: 10,
-        page: cpage,
-        activityStatus: this.activityStatus,
-        name: this.name
+        ...p
       }).then(res => {
         this.tableData = (res.data.list || []).map(item => {
           return {
