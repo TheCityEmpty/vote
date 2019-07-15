@@ -199,8 +199,9 @@ export default {
         }
       })
     },
-    updatePage () {
-
+    updatePage (cpage) {
+      this.cpage = cpage
+      this.queryVoteList(cpage)
     }
   }
 }

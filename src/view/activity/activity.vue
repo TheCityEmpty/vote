@@ -307,6 +307,7 @@ export default {
     },
 
     updatePage (cpage) {
+      this.cpage = cpage
       this.getActivity(cpage)
     },
 

@@ -471,6 +471,7 @@ export default {
       })
     },
     updatePage (cpage) {
+      this.cpage = cpage
       this.getSignUpUse(cpage)
     },
     getSignUpUse (cpage, p) {

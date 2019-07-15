@@ -112,6 +112,7 @@ export default {
       console.log(p)
     },
     updatePage (cpage) {
+      this.cpage = cpage
       this.queryOrderList(cpage)
     },
     queryOrderList (cpage, p = {}) {
