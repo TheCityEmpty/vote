@@ -268,7 +268,7 @@ export default {
         activityStartTime: row.activityStartTime,
         activityEndTime: row.activityEndTime,
         voteStartTime: row.voteStartTime,
-        voteEndTime: row.voteStartTime,
+        voteEndTime: row.voteEndTime,
         adImg: JSON.parse(row.adImg || '[]'),
         model: row.model,
         rule: row.rule,
