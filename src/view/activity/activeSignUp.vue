@@ -593,7 +593,7 @@ export default {
     editSignUp (id) {
       this.$router.push({
         path: '/addSignUp',
-        query: { id: id }
+        query: { id: id, name: this.$route.query.name }
       })
     },
     updatePage (cpage) {

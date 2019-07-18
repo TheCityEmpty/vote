@@ -30,6 +30,9 @@
       <p class="lxh-title-2">微信描述：(限200字以内,显示在分享、回复关键词图文中)</p>
 			<Input v-model="content" class="input-block"></Input>
 
+      <p class="lxh-title-2">访问量：</p>
+			<InputNumber :min="0" style="display: block;width: 100%;" :precision="0" v-model="visits" class="input-block"></InputNumber>
+
 			<UploadPicBox
         title="缩略图"
         :defaultList="imgsDefault"
@@ -238,6 +241,7 @@ export default {
       model: '',
       rule: '',
       prize: '',
+      visits: 0,
       // form end
       status: 'start',
       breadcrumbItem: [
@@ -313,7 +317,6 @@ export default {
   methods: {
 
     getEidImg (obj) {
-      console.log(obj)
       putImg({
         base: obj.base
       }).then(res => {
@@ -352,6 +355,7 @@ export default {
         this.model = res.model
         this.rule = res.rule
         this.prize = res.prize
+        this.visits = res.visits
       })
     },
     removeImgBase64s (id) {
@@ -398,6 +402,12 @@ export default {
       this.setFixedPosition('10000px', '10000px')
     },
     submit () {
+      if (!this.name || !this.note || !this.content || !this.imgs.length || !this.notice || !this.activityStartTime ||
+      !this.activityEndTime || !this.voteStartTime || !this.voteEndTime || !this.adImg.length || !this.model ||
+      !this.rule || !this.prize) {
+        this.$Message.warning('请全部填写')
+        return
+      }
       let params = {}
       // 修改
       if (this.pageType) {
@@ -417,7 +427,8 @@ export default {
           adImg: this.adImg.map(item => item.val),
           model: this.model,
           rule: this.rule,
-          prize: this.prize
+          prize: this.prize,
+          visits: this.visits || 0
         }
       } else {
         // x新增
@@ -437,16 +448,11 @@ export default {
           adImg: this.adImg.map(item => item.val),
           model: this.model,
           rule: this.rule,
-          prize: this.prize
+          prize: this.prize,
+          visits: this.visits || 0
         }
       }
       console.log(params)
-      if (!this.name || !this.note || !this.content || !this.imgs.length || !this.notice || !this.activityStartTime ||
-      !this.activityEndTime || !this.voteStartTime || !this.voteEndTime || !this.adImg.length || !this.model ||
-      !this.rule || !this.prize) {
-        this.$Message.warning('请全部填写')
-        return
-      }
 
       this.$Modal.confirm({
         content: `是否${this.pageType ? '修改' : '提交'}该活动？`,

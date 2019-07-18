@@ -4,11 +4,11 @@
     </BreadcrumbBox>
     <div class="box_wrap">
 			<div class="input-block">
-        <p class="lxh-title-2">关联投票活动主题：</p>
-        <Select v-model="activityId" style="width: 500px;">
+        <p class="lxh-title-2">活动主题：</p>
+         <Alert>活动名称:{{ $route.query.name }}</Alert>
+        <!-- <Select v-model="activityId" style="width: 500px;">
           <Option v-for="item in activitys" :value="item.id" :key="item.id">{{ item.name }}</Option>
-        </Select>
-				<p style="display: inline-block;color: #ed4014;">(这里会显示所有活动， 请正确选择正在进行的活动！)</p>
+        </Select> -->
       </div>
 
 			<p class="lxh-title-2">姓名：</p>
@@ -196,8 +196,7 @@ export default {
       })
     },
     submit () {
-      if (!this.activityId || !this.name || !this.phone || !this.address ||
-      !this.content || !this.img.length) {
+      if (!this.name || !this.phone || !this.address || !this.img.length) {
         this.$Message.warning('请全部填写')
         return
       }

@@ -132,10 +132,31 @@ export default {
           key: 'realTicket',
           minWidth: 80
         },
-
+        {
+          title: '访问量',
+          key: 'visits',
+          minWidth: 140,
+          render: (h, param) => {
+            return (<div>
+              <p>{ param.row.visits }</p>
+              <InputNumber
+                active-change={ false }
+                value= { null }
+                min={ 0 }
+                onOn-change={ (val) => { this.visitsValChange(val) } }
+                size="small"
+                style="width: 70px;"></InputNumber>
+              <Button
+                onClick={ () => { this.visitsChange(param.row) } }
+                size="small"
+                type="primary"
+                style="margin-left: 3px;">加</Button>
+            </div>)
+          }
+        },
         {
           title: '操作',
-          width: 220,
+          width: 200,
           fixed: 'right',
           render: (h, param) => {
             return (<div class="btns">
@@ -169,7 +190,8 @@ export default {
       name: '',
       cpage: 1,
       qrcode: '',
-      modalName: ''
+      modalName: '',
+      visits: ''
     }
   },
 
@@ -179,6 +201,41 @@ export default {
   },
 
   methods: {
+
+    visitsValChange (val) {
+      this.visits = Math.floor(val)
+    },
+
+    visitsChange (row) {
+      if (!this.visits) {
+        this.$Message.warning('请输入你要加的访问量!')
+        return
+      }
+      let params = {
+        id: row.id,
+        activityType: row.activityType,
+        giftStatus: row.giftStatus,
+        signUpStatus: row.signUpStatus,
+        name: row.name,
+        note: row.remarkVal,
+        content: row.content,
+        imgs: JSON.parse(row.img || '[]'),
+        notice: row.notice,
+        activityStartTime: row.activityStartTime,
+        activityEndTime: row.activityEndTime,
+        voteStartTime: row.voteStartTime,
+        voteEndTime: row.voteEndTime,
+        adImg: JSON.parse(row.adImg || '[]'),
+        model: row.model,
+        rule: row.rule,
+        prize: row.prize,
+        visits: this.visits + row.visits
+      }
+      updateActivity(params).then(res => {
+        this.$Message.info('加访问量成功!')
+        this.getActivity(this.cpage)
+      })
+    },
 
     gotoVote (row) {
       this.$router.push({
@@ -242,7 +299,8 @@ export default {
         adImg: JSON.parse(row.adImg || '[]'),
         model: row.model,
         rule: row.rule,
-        prize: row.prize
+        prize: row.prize,
+        visits: row.visits
       }
       updateActivity(params).then(res => {
         this.$Message.info('状态修改成功!')
@@ -272,7 +330,8 @@ export default {
         adImg: JSON.parse(row.adImg || '[]'),
         model: row.model,
         rule: row.rule,
-        prize: row.prize
+        prize: row.prize,
+        visits: row.visits
       }
       updateActivity(params).then(res => {
         this.$Message.info('状态备注成功!')
