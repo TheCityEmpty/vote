@@ -186,7 +186,6 @@ export default {
       getOneSignUpUser({ id: id }).then(result => {
         let res = result.data
         this.info = res.signUpUser
-        this.activityId = res.signUpUser.activity
         this.name = res.signUpUser.userName
         this.virtualTicket = res.signUpUser.virtualTicket
         this.phone = res.signUpUser.phone
@@ -201,7 +200,7 @@ export default {
         return
       }
       let params = {
-        activityId: this.activityId,
+        activityId: this.$route.query.aid,
         name: this.name,
         phone: this.phone,
         virtualTicket: this.virtualTicket,

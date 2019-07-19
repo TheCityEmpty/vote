@@ -3,7 +3,7 @@
     <BreadcrumbBox title="报名管理" :breadcrumbItem="breadcrumbItem"></BreadcrumbBox>
     <Alert v-show="aname">活动名称:{{ aname }}</Alert>
     <div class="box_wrap btns" style="margin-bottom: 20px;">
-      <Button type="primary" :to="{ path: '/addSignUp' }">自定义添加报名人</Button>
+      <Button type="primary" :to="{ path: `/addSignUp?aid=${$route.query.id}&name=${$route.query.name}` }">自定义添加报名人</Button>
       <Button type="primary" @click="deleteSignUpUserByList">批量删除</Button>
       <Button type="primary" @click="timerTask">机器人任务</Button>
       <Button type="primary" @click="exportVote">导出</Button>
