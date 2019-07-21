@@ -263,7 +263,7 @@ export default {
           fixed: 'right',
           render: (h, param) => {
             return (<div class="btns">
-              <Button size="small" onClick={ () => { this.editSignUp(param.row.id) } }>编辑</Button>
+              <Button size="small" onClick={ () => { this.editSignUp(param.row) } }>编辑</Button>
               <Button size="small" onClick={ () => { this.deleteSignUp(param.row.id) } }>删除</Button>
               <Button size="small" onClick={ () => { this.mackqrcode(param.row) } }>链接</Button>
               { (param.row.taskList || []).map(item => (
@@ -590,10 +590,11 @@ export default {
         }
       })
     },
-    editSignUp (id) {
+    editSignUp (row) {
+      console.log(row)
       this.$router.push({
         path: '/addSignUp',
-        query: { id: id, name: this.$route.query.name }
+        query: { id: row.id, name: this.$route.query.name, aid: row.activity }
       })
     },
     updatePage (cpage) {
