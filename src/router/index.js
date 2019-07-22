@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import routes from './routers'
 import iView from 'iview'
+import { queryStatistics } from '@/api'
 Vue.use(Router)
 const router = new Router({
   mode: 'history',
@@ -9,6 +10,7 @@ const router = new Router({
 })
 router.beforeEach((to, from, next) => {
   iView.LoadingBar.start()
+  queryStatistics()
   next()
 })
 router.afterEach(to => {
