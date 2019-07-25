@@ -216,13 +216,14 @@ export default {
         this.$Message.warning('请输入你要加的访问量!')
         return
       }
+      console.log(row)
       let params = {
         id: row.id,
         activityType: row.activityType,
         giftStatus: row.giftStatus,
         signUpStatus: row.signUpStatus,
         name: row.name,
-        note: row.remarkVal,
+        note: row.note,
         content: row.content,
         imgs: JSON.parse(row.img || '[]'),
         notice: row.notice,
@@ -283,10 +284,6 @@ export default {
     },
 
     statusChange (status, row) {
-      console.log(this.tableData)
-      // if (this.tableData.filter(item => Number(item.activityType) === 1).length > 1) {
-      //   this.$Message.warning('tong')
-      // }
       let params = {
         id: row.id,
         activityType: status ? 0 : 1,
