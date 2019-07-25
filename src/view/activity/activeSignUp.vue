@@ -224,7 +224,12 @@ export default {
         {
           title: '实票数',
           key: 'realTicket',
-          minWidth: 100
+          minWidth: 100,
+          render: (h, param) => {
+            return (<div>
+              { param.row.realTicket + param.row.diamond * 3}
+            </div>)
+          }
         },
         {
           title: '钻石数',
@@ -236,7 +241,7 @@ export default {
           key: 'checkStatus',
           minWidth: 100,
           render: (h, param) => {
-            // 0 未审核 1 拒绝  2 已审核
+            // 0 已审核 1 拒绝  2  未审核
             let status = Number(param.row.checkStatus)
             let statusDOM = (<RadioGroup
               class="oneRadio"
@@ -263,6 +268,19 @@ export default {
           fixed: 'right',
           render: (h, param) => {
             return (<div class="btns">
+              <div>
+              备注:
+              <Input
+                onOn-change={ (event) => { this.remarkValChange(event) } }
+                size="small"
+                style="width: 70px;"
+                value = { param.row.note }></Input>
+              <Button
+                onClick={ () => { this.remarkChange(param.row) } }
+                size="small"
+                type="primary"
+                style="margin-left: 3px;">改</Button>
+              </div>
               <Button size="small" onClick={ () => { this.editSignUp(param.row) } }>编辑</Button>
               <Button size="small" onClick={ () => { this.deleteSignUp(param.row.id) } }>删除</Button>
               <Button size="small" onClick={ () => { this.mackqrcode(param.row) } }>链接</Button>
@@ -286,7 +304,8 @@ export default {
       files: [],
       qrcode: null,
       timerTaskModal: false,
-      idlist: []
+      idlist: [],
+      note: ''
     }
   },
 
@@ -302,6 +321,33 @@ export default {
   },
 
   methods: {
+
+    remarkValChange (e) {
+      this.note = event.target.value
+    },
+
+    remarkChange (row) {
+      console.log(row)
+      let params = {
+        name: row.userName,
+        phone: row.phone,
+        virtualTicket: row.virtualTicket,
+        address: row.address,
+        content: row.content,
+        img: JSON.parse(row.img || '[]'),
+        signType: row.signType || 0,
+        checkStatus: row.checkStatus || 0,
+        note: this.note,
+        activityId: row.activity,
+        id: row.id
+      }
+      console.log(params)
+      updateSignUpUser({
+        ...params
+      }).then(res => {
+        this.$Message.info(`修改备注成功`)
+      })
+    },
 
     deleteTask (row, type) {
       batchDeleteTask({
@@ -523,7 +569,8 @@ export default {
         content: row.content,
         img: JSON.parse(row.img || '[]'),
         checkStatus: status,
-        signType: row.signType
+        signType: row.signType,
+        note: row.note
       }
       updateSignUpUser({
         ...params,
@@ -552,7 +599,8 @@ export default {
         content: row.content,
         img: JSON.parse(row.img || '[]'),
         signType: row.signType,
-        checkStatus: row.checkStatus
+        checkStatus: row.checkStatus,
+        note: row.note
       }
       updateSignUpUser({
         ...params,

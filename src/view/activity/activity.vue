@@ -130,7 +130,12 @@ export default {
         {
           title: '实票数',
           key: 'realTicket',
-          minWidth: 80
+          minWidth: 80,
+          render: (h, param) => {
+            return (<div>
+              { param.row.realTicket + param.row.diamonds * 3 }
+            </div>)
+          }
         },
         {
           title: '访问量',

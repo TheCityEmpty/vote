@@ -11,6 +11,9 @@
         </Select> -->
       </div>
 
+      <p class="lxh-title-2">备注：</p>
+			<Input v-model="note" class="input-block"></Input>
+
 			<p class="lxh-title-2">姓名：</p>
 			<Input v-model="name" class="input-block"></Input>
 
@@ -148,7 +151,8 @@ export default {
       heightUnit: 'px',
       width: '',
       height: '',
-      info: {}
+      info: {},
+      note: ''
     }
   },
 
@@ -192,6 +196,7 @@ export default {
         this.address = res.signUpUser.address
         this.imgDefault = res.signUpUser.img
         this.content = res.signUpUser.content
+        this.note = res.signUpUser.note
       })
     },
     submit () {
@@ -207,8 +212,9 @@ export default {
         address: this.address,
         content: this.content,
         img: this.img.map(item => item.val),
-        signType: this.info.signType,
-        checkStatus: this.info.checkStatus
+        signType: this.info.signType || 0,
+        checkStatus: this.info.checkStatus || 0,
+        note: this.note
       }
       console.log(params)
       this.$Modal.confirm({
