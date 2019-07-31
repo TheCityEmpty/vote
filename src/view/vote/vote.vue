@@ -37,7 +37,7 @@
 import './vote.scss'
 import axios from 'axios'
 import TableList from '@_com/tableList'
-import { queryVoteList, getAllActivity, selectVoteCase } from '@/api'
+import { queryVoteList, getAllActivity, selectVoteCase, queryStatistics } from '@/api'
 import { timeStampToDate, dateToTimeStamp } from '@/libs/tools.js'
 export default {
   name: 'signUp',
@@ -113,8 +113,11 @@ export default {
     this.getAllActivityName()
   },
 
-  methods: {
+  beforeCreate () {
+    queryStatistics()
+  },
 
+  methods: {
     selectVoteCase () {
       let p = {
         activityId: this.activityId,

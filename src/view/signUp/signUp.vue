@@ -93,7 +93,7 @@
 import './signUp.scss'
 import axios from 'axios'
 import TableList from '@_com/tableList'
-import { getAllActivity, getSignUpUse, deleteSignUpUser, updateSignUpUser, getActivitySignUp } from '@/api'
+import { getAllActivity, getSignUpUse, deleteSignUpUser, updateSignUpUser, getActivitySignUp, queryStatistics } from '@/api'
 import { Button, InputNumber } from 'iview'
 import { timeStampToDate } from '@/libs/tools.js'
 import QRCode from 'qrcodejs2'
@@ -235,6 +235,10 @@ export default {
   },
   mounted () {
     this.initqrcode()
+  },
+
+  beforeCreate () {
+    queryStatistics()
   },
 
   methods: {

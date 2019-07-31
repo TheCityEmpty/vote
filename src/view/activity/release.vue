@@ -156,7 +156,7 @@
 import './activity.scss'
 import UploadPicBox from '@_com/uploadPic/uploadPic.vue'
 import { dateToTimeStamp, timeStampToDate } from '@/libs/tools.js'
-import { createActivity, queryActivity, updateActivity, putImg } from '@/api'
+import { createActivity, queryActivity, updateActivity, putImg, queryStatistics } from '@/api'
 const toolbarOptions = [
   ['bold', 'italic', 'underline', 'strike'], // toggled buttons
   ['blockquote', 'code-block'],
@@ -312,6 +312,10 @@ export default {
     } else {
       this.pageType = false
     }
+  },
+
+  beforeCreate () {
+    queryStatistics()
   },
 
   methods: {

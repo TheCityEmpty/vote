@@ -28,6 +28,11 @@ module.exports = {
   configureWebpack: config => {
     // 设置入口文件
     config.entry.app = ['babel-polyfill', './src/main.js']
+    // 取消 webpack 打包性能提示
+    config.performance = {
+      hints: false
+    }
+
     // 设置将所有css 文件打包成一个
     if (process.env.NODE_ENV === 'production') {
       config.optimization = {

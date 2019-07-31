@@ -24,7 +24,7 @@
 <script>
 import './pay.scss'
 import TableList from '@_com/tableList'
-import { getAllActivity, selectOrderCase } from '@/api'
+import { getAllActivity, selectOrderCase, queryStatistics } from '@/api'
 import { timeStampToDate, dateToTimeStamp } from '@/libs/tools.js'
 import { Button } from 'iview'
 export default {
@@ -99,6 +99,10 @@ export default {
 
   created () {
     this.queryOrderList(this.cpage)
+  },
+
+  beforeCreate () {
+    queryStatistics()
   },
 
   methods: {

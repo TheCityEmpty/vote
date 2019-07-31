@@ -53,7 +53,7 @@
 import './activity.scss'
 import TableList from '@_com/tableList'
 import { Button, Input, Tooltip } from 'iview'
-import { getAllActivity, deleteActivity, updateActivity } from '@/api'
+import { getAllActivity, deleteActivity, updateActivity, queryStatistics } from '@/api'
 import { timeStampToDate } from '@/libs/tools.js'
 import QRCode from 'qrcodejs2'
 export default {
@@ -203,6 +203,10 @@ export default {
   mounted () {
     this.getActivity(this.cpage)
     this.initqrcode()
+  },
+
+  beforeCreate () {
+    queryStatistics()
   },
 
   methods: {

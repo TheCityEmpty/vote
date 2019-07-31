@@ -78,7 +78,7 @@
 
 <script>
 import './signUp.scss'
-import { addSignUpUser, getAllActivity, getOneSignUpUser, updateSignUpUser } from '@/api'
+import { addSignUpUser, getAllActivity, getOneSignUpUser, updateSignUpUser, queryStatistics } from '@/api'
 import UploadPicBox from '@_com/uploadPic/uploadPic.vue'
 const toolbarOptions = [
   ['bold', 'italic', 'underline', 'strike'], // toggled buttons
@@ -185,7 +185,12 @@ export default {
     }
   },
 
+  beforeCreate () {
+    queryStatistics()
+  },
+
   methods: {
+
     getOneSignUpUser (id) {
       getOneSignUpUser({ id: id }).then(result => {
         let res = result.data
